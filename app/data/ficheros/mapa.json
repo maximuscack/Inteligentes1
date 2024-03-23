@@ -1,0 +1,266 @@
+{
+    "grafo": {
+        "ciudad": "Manizales",
+        "nodos": [
+            {
+                "id": "FCD247",
+                "barrio": "San Jorge",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 10
+                }
+            },
+            {
+                "id": "ACD237",
+                "barrio": "Trinidad",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 10
+                }
+            },
+            {
+                "id": "FCD251",
+                "barrio": "La Enea",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 15
+                }
+            },
+            {
+                "id": "FCD252",
+                "barrio": "Malhabar",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 0
+                }
+            },
+            {
+                "id": "FCD253",
+                "barrio": "Palermo",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 20
+                }
+            },
+            {
+                "id": "FCD254",
+                "barrio": "El Carmen",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 5
+                }
+            },
+            {
+                "id": "FCD255",
+                "barrio": "Versalles",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 0
+                }
+            },
+            {
+                "id": "FCD256",
+                "barrio": "Estrella",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 10
+                }
+            },
+            {
+                "id": "FCD257",
+                "barrio": "Bosques del Norte",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 15
+                }
+            },
+            {
+                "id": "FCD258",
+                "barrio": "Villa Cafe",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 0
+                }
+            },
+            {
+                "id": "FCD259",
+                "barrio": "La Carola",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 20
+                }
+            },
+            {
+                "id": "FCD260",
+                "barrio": "El Triunfo",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 5
+                }
+            },
+            {
+                "id": "FCD261",
+                "barrio": "La Asuncion",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 7
+                }
+            },
+            {
+                "id": "FCD262",
+                "barrio": "San Daniel",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 0
+                }
+            },
+            {
+                "id": "FCD263",
+                "barrio": "La Sultana",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 12
+                }
+            },
+            {
+                "id": "FCD264",
+                "barrio": "Los Alamos",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 8
+                }
+            },
+            {
+                "id": "FCD265",
+                "barrio": "El Nevado",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 0
+                }
+            },
+            {
+                "id": "FCD266",
+                "barrio": "La Cumbre",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 10
+                }
+            },
+            {
+                "id": "FCD267",
+                "barrio": "Villa Hermosa",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 15
+                }
+            },
+            {
+                "id": "FCD268",
+                "barrio": "La Linda",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 0
+                }
+            },
+            {
+                "id": "FCD269",
+                "barrio": "El Bosque",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 20
+                }
+            },
+            {
+                "id": "FCD270",
+                "barrio": "La Aurora",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 5
+                }
+            }
+        ],
+        "arcos": [
+            {
+                "id": "SAB234",
+                "carrera": "12",
+                "calle": "23-34",
+                "origen": "ACD237",
+                "destino": "FCD247",
+                "distancia": 100,
+                "velocidad_maxima": 60
+            },
+            {
+                "id": "SAB235",
+                "carrera": "13",
+                "calle": "24-35",
+                "origen": "FCD247",
+                "destino": "FCD251",
+                "distancia": 110,
+                "velocidad_maxima": 65
+            },
+            {
+                "id": "SAB236",
+                "carrera": "14",
+                "calle": "25-36",
+                "origen": "FCD247",
+                "destino": "FCD252",
+                "distancia": 120,
+                "velocidad_maxima": 70
+            },
+            {
+                "id": "SAB237",
+                "carrera": "15",
+                "calle": "26-37",
+                "origen": "FCD247",
+                "destino": "FCD253",
+                "distancia": 130,
+                "velocidad_maxima": 75
+            },
+                                   
+        ]
+    }
+}

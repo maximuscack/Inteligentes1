@@ -1,0 +1,118 @@
+{
+    "grafo": {
+        "ciudad": "Manizales",
+        "nodos": [
+            {
+                "id": "FCD247",
+                "barrio": "San Jorge",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 10
+                }
+            },
+            {
+                "id": "ACD237",
+                "lugar": "Solferino",
+                "barrio": "Trinidad",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 10
+                }
+            },
+            {
+                "id": "FCD248",
+                "barrio": "La Francia",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_en_rojo": 10
+                }
+            },
+            {
+                "id": "FCD249",
+                "barrio": "El Bosque",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_en_rojo": 10
+                }
+            },
+            {
+                "id": "FCD250",
+                "barrio": "Villa Pilar",
+                "es_turistico": false,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_en_rojo": 10
+                }
+            },
+            {
+                "id": "FCD251",
+                "barrio": "El Cable",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": false,
+                    "tiempo_en_rojo": 10
+                }
+            }
+        ],
+        "arcos": [
+            {
+                "id": "SAB234",
+                "carrera": "12",
+                "calle": "23-34",
+                "origen": "ACD237",
+                "destino": "FCD247",
+                "distancia": 100
+            },
+            {
+                "id": "SAB235",
+                "carrera": "13",
+                "calle": "42-48",
+                "origen": "FCD247",
+                "destino": "ACD237",
+                "distancia": 210
+            },
+            {
+                "id": "SAB236",
+                "carrera": "14",
+                "calle": "23-34",
+                "origen": "FCD247",
+                "destino": "FCD248",
+                "distancia": 150
+            },
+            {
+                "id": "SAB237",
+                "carrera": "15",
+                "calle": "42-48",
+                "origen": "FCD248",
+                "destino": "FCD249",
+                "distancia": 200
+            },
+            {
+                "id": "SAB238",
+                "carrera": "16",
+                "calle": "23-34",
+                "origen": "FCD249",
+                "destino": "FCD250",
+                "distancia": 250
+            },
+            {
+                "id": "SAB239",
+                "carrera": "17",
+                "calle": "42-48",
+                "origen": "FCD250",
+                "destino": "FCD251",
+                "distancia": 300
+            }
+        ]
+    }
+}
