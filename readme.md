@@ -1,3 +1,4 @@
 # Inteligentes I
 
-Inicialización del proyecto.
+Inicialización del proyecto, inteligentes I.
+Sobre grafos.
