@@ -42,6 +42,12 @@ for edge in G.edges:
     G.edges[edge]['weight'] = G.edges[edge]['length'] / maxspeed
 
 
+nodos_df = ox.graph_to_gdfs(G, nodes=True, edges=False)
+# Mostrar el DataFrame con información de las calles
+print(nodos_df.columns)
+print(nodos_df.head())
+
+
 '''
 Útiles visuales
 '''
