@@ -1,0 +1,38 @@
+{
+    "grafo": {
+        "Ciudad": "Manizales",
+        "nodos": [
+            {
+                "id": "FCD247",
+                "barrio": "San Jorge",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": true,
+                    "en_rojo": true,
+                    "tiempo_por_estado": 10
+                }
+            },
+            {
+                "id": "ACD237",
+                "lugar": "Solferino",
+                "barrio": "Trinidad",
+                "es_turistico": true,
+                "semaforo": {
+                    "habilitado": false,
+                    "en_rojo": false,
+                    "tiempo_por_estado": 10
+                }
+            }
+        ],
+        "arcos": [
+            {
+                "id": "SAB234",
+                "origen": "ACD237",
+                "destino": "FCD247",
+                "es_calle": true,
+                "es_creciente": true,
+                "distancia": 100
+            }
+        ]
+    }
+}
