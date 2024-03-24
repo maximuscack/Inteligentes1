@@ -250,11 +250,9 @@ def reconstruct_path(orig, dest, plot=False, algorithm=None):
         plot_graph()
 
 
-# sel_node = ox.get_nearest_node(G, (5.068, -75.517))
-# print('SEL_NODE:', sel_node)
 
-# start = random.choice(list(G.nodes))
-# end = random.choice(list(G.nodes))
+start = random.choice(list(G.nodes))
+end = random.choice(list(G.nodes))
 
-# a_star(start, end, plot=True)
-# reconstruct_path(start, end, plot=True)
+a_star(start, end, plot=True)
+reconstruct_path(start, end, plot=True)
