@@ -1,6 +1,7 @@
 import os
 import random
 from networkx import MultiDiGraph
+import networkx as nx
 import pandas as pd
 import osmnx as ox
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ import heapq
 CIUDAD_MANIZALES_GRAPHML = 'app/data/mapas/manizales.graphml'
 
 G: MultiDiGraph
+N: MultiDiGraph = nx.MultiDiGraph()
 
 # Verificar si el archivo GraphML existe
 if os.path.exists(CIUDAD_MANIZALES_GRAPHML):
@@ -32,20 +34,54 @@ for edge in G.edges:
     if 'maxspeed' in G.edges[edge]:
         maxspeed = G.edges[edge]['maxspeed']
         if isinstance(maxspeed, list):
-            print('list?!', maxspeed)
             speeds = [int(speed) for speed in maxspeed]
             maxspeed = min(speeds)
         elif isinstance(maxspeed, str):
             maxspeed = int(maxspeed)
     G.edges[edge]['maxspeed'] = maxspeed
     # Adding the 'weight' attribute (time = distance / speed)
-    G.edges[edge]['weight'] = G.edges[edge]['length'] / maxspeed
+    G.edges[edge]['time'] = G.edges[edge]['length'] / maxspeed
+
+for node in G.nodes:
+    position = (G.nodes[node]['x'], G.nodes[node]['y'])
+    G.nodes[node]['pos'] = position
+
+for node, attrs in G.nodes(data=True):
+    N.add_node(node, **attrs)
 
 
-nodos_df = ox.graph_to_gdfs(G, nodes=True, edges=False)
-# Mostrar el DataFrame con información de las calles
-print(nodos_df.columns)
-print(nodos_df.head())
+def on_click(event):
+    if event.button == 1 and event.inaxes is not None:
+        x, y = event.xdata, event.ydata
+        # Buscar el nodo más cercano a la posición clickeada
+        min_dist = float('inf')
+        selected_node = None
+        for node, (ntx, ny) in nx.get_node_attributes(G, 'pos').items():
+            dist = (x - ntx) ** 2 + (y - ny) ** 2
+            if dist < min_dist:
+                min_dist = dist
+                selected_node = node
+        if selected_node is not None:
+            print(f"Nodo seleccionado: {selected_node}")
+
+
+# Dibujar solo los nodos con detalles mínimos
+plt.figure(figsize=(8, 6))
+pos = nx.get_node_attributes(N, 'pos')
+nx.draw_networkx_nodes(
+    N, pos=pos, node_size=10, alpha=0.5,
+    node_color='skyblue'
+)
+plt.title("Manizales")
+
+# Registrar el manejador de eventos de clic
+plt.gcf().canvas.mpl_connect('button_press_event', on_click)
+
+plt.axis('off')  # Ocultar ejes
+plt.show()
+
+
+nodos_df = ox.graph_to_gdfs(G, edges=False)
 
 
 '''
@@ -115,8 +151,8 @@ def dijkstra(orig, dest, plot=False):
         G.nodes[node]["distance"] = float("inf")
         G.nodes[node]["previous"] = None
         G.nodes[node]["size"] = 0
-    for edge in G.edges:
-        style_unvisited_edge(edge)
+    for edge_one in G.edges:
+        style_unvisited_edge(edge_one)
     G.nodes[orig]["distance"] = 0
     G.nodes[orig]["size"] = 50
     G.nodes[dest]["size"] = 50
@@ -132,16 +168,16 @@ def dijkstra(orig, dest, plot=False):
         if G.nodes[node]["visited"]:
             continue
         G.nodes[node]["visited"] = True
-        for edge in G.out_edges(node):
-            style_visited_edge((edge[0], edge[1], 0))
-            neighbor = edge[1]
-            weight = G.edges[(edge[0], edge[1], 0)]["weight"]
+        for edge_one in G.out_edges(node):
+            style_visited_edge((edge_one[0], edge_one[1], 0))
+            neighbor = edge_one[1]
+            weight = G.edges[(edge_one[0], edge_one[1], 0)]["weight"]
             if G.nodes[neighbor]["distance"] > G.nodes[node]["distance"] + weight:
                 G.nodes[neighbor]["distance"] = G.nodes[node]["distance"] + weight
                 G.nodes[neighbor]["previous"] = node
                 heapq.heappush(pq, (G.nodes[neighbor]["distance"], neighbor))
-                for edge2 in G.out_edges(neighbor):
-                    style_active_edge((edge2[0], edge2[1], 0))
+                for edge_two in G.out_edges(neighbor):
+                    style_active_edge((edge_two[0], edge_two[1], 0))
         step += 1
 
 
@@ -187,6 +223,7 @@ def a_star(orig, dest, plot=False):
                 heapq.heappush(pq, (G.nodes[neighbor]["f_score"], neighbor))
                 for edge2 in G.out_edges(neighbor):
                     style_active_edge((edge2[0], edge2[1], 0))
+        plot_graph()
         step += 1
 
 
@@ -202,8 +239,8 @@ def reconstruct_path(orig, dest, plot=False, algorithm=None):
         speeds.append(G.edges[(prev, curr, 0)]["maxspeed"])
         style_path_edge((prev, curr, 0))
         if algorithm:
-            G.edges[(prev, curr, 0)][f"{algorithm}_uses"] = G.edges[(
-                prev, curr, 0)].get(f"{algorithm}_uses", 0) + 1
+            G.edges[(prev, curr, 0)][f"{algorithm}_uses"] \
+                = G.edges[(prev, curr, 0)].get(f"{algorithm}_uses", 0) + 1
         curr = prev
     dist /= 1000
     if plot:
@@ -213,8 +250,11 @@ def reconstruct_path(orig, dest, plot=False, algorithm=None):
         plot_graph()
 
 
-start = random.choice(list(G.nodes))
-end = random.choice(list(G.nodes))
+# sel_node = ox.get_nearest_node(G, (5.068, -75.517))
+# print('SEL_NODE:', sel_node)
 
-a_star(start, end, plot=True)
-reconstruct_path(start, end, plot=True)
+# start = random.choice(list(G.nodes))
+# end = random.choice(list(G.nodes))
+
+# a_star(start, end, plot=True)
+# reconstruct_path(start, end, plot=True)
