@@ -1,4 +1,12 @@
 streamlit
-networkx
 matplotlib
 osmnx
+mplleaflet
+streamlit_folium
+
+geopandas
+networkx
+numpy
+pandas
+requests
+shapely
