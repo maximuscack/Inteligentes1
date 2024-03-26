@@ -84,7 +84,7 @@ plt.axis('off')  # Ocultar ejes
 plt.show()
 
 
-nodos_df = ox.graph_to_gdfs(G, edges=False)
+# nodos_df = ox.graph_to_gdfs(G, edges=False)
 
 
 '''
