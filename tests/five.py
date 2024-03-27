@@ -307,6 +307,96 @@ style_traffic_lights()
 plot_graph()
 
 #a_star_traffic_lights(start, end, plot=True)
+
+
 #--------------------------------------------------------------------------------
 
 
+def add_node_sizes(default_size=10):
+    '''
+    Agrega el atributo 'size' a todos los nodos con un valor predeterminado.
+    '''
+    for node in G.nodes:
+        if 'size' not in G.nodes[node]:
+            G.nodes[node]['size'] = default_size
+
+def style_traffic_lights(default_color='green', default_linewidth=1):
+    '''
+    Modifica el color de los nodos que representan semáforos y agrega el atributo 'color', 'alpha' y 'linewidth' a los bordes.
+    '''
+    for node, data in G.nodes(data=True):
+        if random.random() < 0.15:
+            G.nodes[node]['semaforo_rojo'] = True
+            G.nodes[node]['tiempo'] = 10
+            G.nodes[node]['node_color'] = default_color
+
+        if random.random() < 0.0125:
+            G.nodes[node]['es_turistico'] = True
+            G.nodes[node]['node_color'] = '#FA0AFA'
+
+    for edge in G.edges:
+        if 'color' not in G.edges[edge]:
+            G.edges[edge]['color'] = '#d36206'  # Define un color predeterminado para los bordes
+        if 'linewidth' not in G.edges[edge]:
+            G.edges[edge]['linewidth'] = default_linewidth  # Define un ancho de línea predeterminado para los bordes
+
+def bfs_turisticos(origen):
+    visitados = set()  # Conjunto de nodos visitados
+    turisticos = set()  # Conjunto de nodos turísticos
+    for node, data in G.nodes(data=True):
+        
+        if 'es_turistico' in data:
+            print(node, data)
+            #if G[node]["es_turistico"] == True:
+            turisticos.add(node)
+
+    # Creamos una cola para el BFS
+    cola = deque([(origen, [origen])])
+
+    while cola:
+        nodo, camino = cola.popleft()
+        visitados.add(nodo)
+
+        # Si el nodo actual es un sitio turístico y aún no lo hemos visitado, lo agregamos al camino
+        if nodo in turisticos and nodo not in camino:
+            camino.append(nodo)
+
+        # Si hemos visitado todos los sitios turísticos, detenemos el BFS
+        if turisticos.issubset(set(camino)):
+            return camino
+
+        # Exploramos los vecinos del nodo actual
+        for vecino in G.neighbors(nodo):
+            if vecino not in visitados:
+                cola.append((vecino, camino + [vecino]))
+
+    return None  # Si no se puede encontrar un camino que pase por todos los sitios turísticos
+
+
+# Seleccionamos un nodo aleatorio como punto de inicio
+inicio = random.choice(list(G.nodes))
+
+# Ejecutamos el algoritmo BFS desde el nodo de inicio
+camino_turisticos = bfs_turisticos(inicio)
+
+# Verificar si se encontró un camino
+if camino_turisticos is not None:
+    # Estilizamos el camino encontrado
+    for i in range(len(camino_turisticos) - 1):
+        edge = (camino_turisticos[i], camino_turisticos[i+1], 0)
+        if 'color' in G.edges[edge]:
+            G.edges[edge]['color'] = 'red'
+        else:
+            G.edges[edge]['color'] = 'default_color'  # Color predeterminado si no está definido
+        G.edges[edge]['linewidth'] = 3
+
+    # Crear la lista de colores de los bordes con una verificación de la existencia de la clave 'color'
+    edge_color = [G.edges[edge].get('color', 'default_color') for edge in G.edges]
+
+    # Crear la lista de anchos de los bordes con una verificación de la existencia de la clave 'linewidth'
+    edge_linewidth = [G.edges[edge].get('linewidth', 1) for edge in G.edges]
+
+    # Dibujar el grafo con los bordes coloreados y con sus anchos definidos
+    ox.plot_graph(G, node_size=10, edge_color=edge_color, edge_linewidth=edge_linewidth)
+else:
+    print("No se pudo encontrar un camino que pase por todos los sitios turísticos.")
