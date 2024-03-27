@@ -55,6 +55,12 @@ def graficar_mapa(mapa):
     folium_static(mapa)
 
 
+def limpiar_carpeta():
+    files = os.listdir(IMAGES_DIR)
+    for file in files:
+        os.remove(os.path.join(IMAGES_DIR, file))
+
+
 def style_unvisited_edge(graph, edge):
     graph.edges[edge]['color'] = '#d36206'
     graph.edges[edge]['alpha'] = 0.2
@@ -84,6 +90,7 @@ def style_path_edge(graph, edge, step):
 
 def plot_graph(graph, step):
     fig, ax = plt.subplots(figsize=(10, 10))
+
     ox.plot_graph(
         graph,
         node_size=[graph.nodes[node]['size'] for node in graph.nodes],
@@ -91,19 +98,14 @@ def plot_graph(graph, step):
         edge_alpha=[graph.edges[edge]['alpha'] for edge in graph.edges],
         edge_linewidth=[graph.edges[edge]['linewidth']
                         for edge in graph.edges],
-        bgcolor='black',
         ax=ax
     )
-    ax.set_title(f'Step {step}')
+    ax.set_title(f'Step {step}', color='white')
     ax.set_axis_off()
-    plt.savefig(os.path.join(IMAGES_DIR, f'image_{step}.png'))
+    plt.savefig(
+        os.path.join(IMAGES_DIR, f'image_{step}.png'), facecolor='black'
+    )
     plt.close(fig)
-
-
-def limpiar_carpeta():
-    files = os.listdir(IMAGES_DIR)
-    for file in files:
-        os.remove(os.path.join(IMAGES_DIR, file))
 
 
 def distance(graph, node1, node2):
@@ -165,10 +167,14 @@ def reconstruct_path(graph, origen, destino, plot=False, algorithm=None):
         prev = graph.nodes[curr]['previous']
         dist += graph.edges[(prev, curr, 0)]['length']
         speeds.append(graph.edges[(prev, curr, 0)]['maxspeed'])
-        style_path_edge(graph, (prev, curr, 0), step)
-        if algorithm:
-            graph.edges[(prev, curr, 0)][f'{algorithm}_uses'] \
-                = graph.edges[(prev, curr, 0)].get(f'{algorithm}_uses', 0) + 1
+        edge = (prev, curr, 0)
+        if edge in graph.edges:  # Ensure the edge exists in the graph
+            style_path_edge(graph, edge, step)
+            if algorithm:
+                graph.edges[edge][f'{algorithm}_uses'] \
+                    = graph.edges[edge].get(f'{algorithm}_uses', 0) + 1
+        else:
+            print(f"Error: Edge {edge} not found in graph")
         curr = prev
         step += 1
     dist /= 1000
