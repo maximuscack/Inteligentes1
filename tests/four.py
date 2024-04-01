@@ -152,7 +152,7 @@ def dijkstra(orig, dest, plot=False):
     for node in G.nodes:
         G.nodes[node]['visited'] = False
         G.nodes[node]['distance'] = float('inf')
-        G.nodes[node]['previous'] = None
+        G.nodes[node]['previous'] = None    
         G.nodes[node]['size'] = 0
     for edge_one in G.edges:
         style_unvisited_edge(edge_one)
