@@ -34,16 +34,21 @@ def cargar_graficos(barrios):
     return graficos
 
 
-def inicializar_mapa(barrio_selec, graficos):
+def inicializar_mapa(barrio_selec, graficos) -> tuple[folium.Map, MultiDiGraph]:
     indice_barrio = barrios.index(barrio_selec)
-    graph = graficos[indice_barrio]
+    graph: MultiDiGraph = graficos[indice_barrio]
     for node in graph.nodes:
-        node_data = graph.nodes[node]
-        if 'y' in node_data and 'x' in node_data:
-            lat, lon = node_data['y'], node_data['x']
-            break
-    mapa = folium.Map(location=[lat, lon], zoom_start=15,
-                      control_scale=True, zoom_control=False)
+        lat, lon = (
+            graph.nodes[node]['y'], graph.nodes[node]['x']
+        )
+        break
+    mapa = folium.Map(
+        location=[lat, lon],
+        zoom_start=15.5,
+        control_scale=True,
+        zoom_control=True,
+        prefer_canvas=True
+    )
     for nodo, data in graph.nodes(data=True):
         folium.Marker(location=(data['y'], data['x']),
                       popup=str(nodo)).add_to(mapa)
@@ -128,6 +133,7 @@ def a_star(graph, origen, destino, plot=False):
     graph.nodes[origen]['g_score'] = 0
     graph.nodes[origen]['f_score'] = distance(graph, origen, destino)
     pq = [(graph.nodes[origen]['f_score'], origen)]
+    print('priority queue', pq)
     while pq:
         _, node = heapq.heappop(pq)
         if node == destino:
@@ -148,7 +154,8 @@ def a_star(graph, origen, destino, plot=False):
                 graph.nodes[neighbor]['f_score'] = tentative_g_score + \
                     distance(graph, neighbor, destino)
                 heapq.heappush(
-                    pq, (graph.nodes[neighbor]['f_score'], neighbor))
+                    pq, (graph.nodes[neighbor]['f_score'], neighbor)
+                )
                 for edge2 in graph.out_edges(neighbor):
                     style_active_edge(graph, (edge2[0], edge2[1], 0), step)
         step += 1
