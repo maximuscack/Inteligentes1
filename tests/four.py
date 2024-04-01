@@ -1,3 +1,4 @@
+from collections import deque
 import os
 import random
 from networkx import MultiDiGraph
@@ -6,6 +7,7 @@ import pandas as pd
 import osmnx as ox
 import matplotlib.pyplot as plt
 import heapq
+import random
 
 CIUDAD_MANIZALES_GRAPHML = 'app/data/mapas/manizales.graphml'
 # Definir una carpeta para almacenar las imágenes
@@ -87,6 +89,10 @@ plt.show()
 # nodos_df = ox.graph_to_gdfs(G, edges=False)
 
 
+
+
+
+
 '''
 Útiles visuales
 '''
@@ -125,7 +131,7 @@ def plot_graph():
         edge_color=[G.edges[edge]['color'] for edge in G.edges],
         edge_alpha=[G.edges[edge]['alpha'] for edge in G.edges],
         edge_linewidth=[G.edges[edge]['linewidth'] for edge in G.edges],
-        node_color='white',
+        node_color=[G.nodes[node].get('node_color', '#e8a900') for node in G.nodes],
         bgcolor='#18080e'
     )
 
@@ -154,8 +160,8 @@ def dijkstra(orig, dest, plot=False):
         G.nodes[node]['distance'] = float('inf')
         G.nodes[node]['previous'] = None    
         G.nodes[node]['size'] = 0
-    for edge_one in G.edges:
-        style_unvisited_edge(edge_one)
+    for edge in G.edges:
+        style_unvisited_edge(edge)
     G.nodes[orig]['distance'] = 0
     G.nodes[orig]['size'] = 50
     G.nodes[dest]['size'] = 50
@@ -171,16 +177,16 @@ def dijkstra(orig, dest, plot=False):
         if G.nodes[node]['visited']:
             continue
         G.nodes[node]['visited'] = True
-        for edge_one in G.out_edges(node):
-            style_visited_edge((edge_one[0], edge_one[1], 0))
-            neighbor = edge_one[1]
-            weight = G.edges[(edge_one[0], edge_one[1], 0)]['weight']
+        for edge in G.out_edges(node):
+            style_visited_edge((edge[0], edge[1], 0))
+            neighbor = edge[1]
+            weight = G.edges[(edge[0], edge[1], 0)]['weight']
             if G.nodes[neighbor]['distance'] > G.nodes[node]['distance'] + weight:
                 G.nodes[neighbor]['distance'] = G.nodes[node]['distance'] + weight
                 G.nodes[neighbor]['previous'] = node
                 heapq.heappush(pq, (G.nodes[neighbor]['distance'], neighbor))
-                for edge_two in G.out_edges(neighbor):
-                    style_active_edge((edge_two[0], edge_two[1], 0))
+                for edge2 in G.out_edges(neighbor):
+                    style_active_edge((edge2[0], edge2[1], 0))
         step += 1
 
 
@@ -241,8 +247,8 @@ def reconstruct_path(orig, dest, plot=False, algorithm=None):
         speeds.append(G.edges[(prev, curr, 0)]['maxspeed'])
         style_path_edge((prev, curr, 0))
         if algorithm:
-            G.edges[(prev, curr, 0)][f'{algorithm}_uses'] \
-                = G.edges[(prev, curr, 0)].get(f'{algorithm}_uses', 0) + 1
+            G.edges[(prev, curr, 0)][f'{algorithm}_uses'] = G.edges[(
+                prev, curr, 0)].get(f'{algorithm}_uses', 0) + 1
         curr = prev
     dist /= 1000
     if plot:
@@ -255,5 +261,99 @@ def reconstruct_path(orig, dest, plot=False, algorithm=None):
 start = random.choice(list(G.nodes))
 end = random.choice(list(G.nodes))
 
-a_star(start, end, plot=True)
-reconstruct_path(start, end, plot=True)
+#a_star(start, end, plot=True)
+#reconstruct_path(start, end, plot=True)
+
+def add_node_sizes(default_size=10):
+    '''
+    Agrega el atributo 'size' a todos los nodos con un valor predeterminado.
+    '''
+    for node in G.nodes:
+        if 'size' not in G.nodes[node]:
+            G.nodes[node]['size'] = default_size
+
+def style_traffic_lights(default_color='green', default_linewidth=1):
+    '''
+    Modifica el color de los nodos que representan semáforos y agrega el atributo 'color', 'alpha' y 'linewidth' a los bordes.
+    '''
+    for node, data in G.nodes(data=True):
+        #! Editar estilos originales.
+
+        if random.random() < 0.15:
+            G.nodes[node]['semaforo_rojo'] = True
+            G.nodes[node]['tiempo'] = 10
+            G.nodes[node]['node_color'] = default_color
+
+        if random.random() < 0.0125:
+            G.nodes[node]['es_turistico'] = True
+            G.nodes[node]['node_color'] = '#FA0AFA'
+
+        # if 'traffic_light' in G.nodes[node]:
+        #     print(G.nodes[node])
+
+        # if G.nodes[node]['semaforo']:  # Verifica si el nodo tiene el atributo 'semaforo'
+            # semaforo = data['semaforo']
+            # if isinstance(semaforo, dict) and 'color' in semaforo:
+            # G.nodes[node]['node_color'] = default_color  # Cambia el color del nodo según el atributo 'color' del semáforo
+
+    for edge in G.edges:
+        if 'color' not in G.edges[edge]:
+            G.edges[edge]['color'] = '#d36206'  # Define un color predeterminado para los bordes
+        if 'alpha' not in G.edges[edge]:
+            G.edges[edge]['alpha'] = 1  # Define un valor predeterminado para la transparencia de los bordes
+        if 'linewidth' not in G.edges[edge]:
+            G.edges[edge]['linewidth'] = default_linewidth  # Define un ancho de línea predeterminado para los bordes
+
+
+def a_star_traffic_lights(orig, dest, plot=False):
+    for node in G.nodes:
+        G.nodes[node]['previous'] = None
+        G.nodes[node]['size'] = 0
+        G.nodes[node]['g_score'] = float('inf')
+        G.nodes[node]['f_score'] = float('inf')
+    for edge in G.edges:
+        style_unvisited_edge(edge)
+    G.nodes[orig]['size'] = 50
+    G.nodes[dest]['size'] = 50
+    G.nodes[orig]['g_score'] = 0
+    G.nodes[orig]['f_score'] = distance(orig, dest)
+    pq = [(G.nodes[orig]['f_score'], orig)]
+    step = 0
+    while pq:
+        _, node = heapq.heappop(pq)
+        if node == dest:
+            if plot:
+                print('Iteraciones:', step)
+                plot_graph()
+            return reconstruct_path(orig, dest, plot=plot, algorithm='a_star_traffic_lights')
+        for edge in G.out_edges(node):
+            style_visited_edge((edge[0], edge[1], 0))
+            neighbor = edge[1]
+            tentative_g_score = G.nodes[node]['g_score'] + \
+                distance(node, neighbor)
+            travel_time = G.edges[(node, neighbor, 0)]['weight']  # considera el tiempo de viaje en función de la distancia y la velocidad máxima
+            # Añade el tiempo de espera en semáforos al tiempo de viaje
+            travel_time += G.edges[(node, neighbor, 0)].get('traffic_light_wait', 0)
+            tentative_g_score += G.edges[(node, neighbor, 0)].get('traffic_light_wait', 0)
+            if tentative_g_score < G.nodes[neighbor]['g_score']:
+                G.nodes[neighbor]['previous'] = node
+                G.nodes[neighbor]['g_score'] = tentative_g_score
+                G.nodes[neighbor]['f_score'] = tentative_g_score + \
+                    distance(neighbor, dest)
+                heapq.heappush(pq, (G.nodes[neighbor]['f_score'], neighbor))
+                for edge2 in G.out_edges(neighbor):
+                    style_active_edge((edge2[0], edge2[1], 0))
+        step += 1
+
+# Antes de trazar el grafo, asegúrate de que todos los nodos tengan el atributo 'size' definido
+add_node_sizes()
+style_traffic_lights()
+
+
+# Trama el grafo
+plot_graph()
+
+#a_star_traffic_lights(start, end, plot=True)
+#--------------------------------------------------------------------------------
+
+
