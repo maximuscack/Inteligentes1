@@ -2,6 +2,7 @@ from collections import deque
 import os
 import random
 from networkx import MultiDiGraph
+import networkx as nx
 import pandas as pd
 import osmnx as ox
 import matplotlib.pyplot as plt
@@ -9,19 +10,23 @@ import heapq
 import random
 
 CIUDAD_MANIZALES_GRAPHML = 'app/data/mapas/manizales.graphml'
+# Definir una carpeta para almacenar las imágenes
+# IMAGES_DIR = 'app/data/images'
+# os.makedirs(IMAGES_DIR, exist_ok=True)
 
 G: MultiDiGraph
+N: MultiDiGraph = nx.MultiDiGraph()
 
 # Verificar si el archivo GraphML existe
 if os.path.exists(CIUDAD_MANIZALES_GRAPHML):
     # Cargar el gráfico desde el archivo GraphML
     G = ox.load_graphml(CIUDAD_MANIZALES_GRAPHML)
+
 else:
     # Obtener el gráfico de la ciudad de Manizales desde OpenStreetMap
     G = ox.graph_from_place('Manizales, Colombia', network_type='all')
     # Guardar el gráfico en formato GraphML
     ox.save_graphml(G, filepath=CIUDAD_MANIZALES_GRAPHML)
-
 
 '''
 Importing and cleaning the map
@@ -34,14 +39,56 @@ for edge in G.edges:
     if 'maxspeed' in G.edges[edge]:
         maxspeed = G.edges[edge]['maxspeed']
         if isinstance(maxspeed, list):
-            print('list?!', maxspeed)
             speeds = [int(speed) for speed in maxspeed]
             maxspeed = min(speeds)
         elif isinstance(maxspeed, str):
             maxspeed = int(maxspeed)
     G.edges[edge]['maxspeed'] = maxspeed
     # Adding the 'weight' attribute (time = distance / speed)
-    G.edges[edge]['weight'] = G.edges[edge]['length'] / maxspeed
+    G.edges[edge]['time'] = G.edges[edge]['length'] / maxspeed
+
+for node in G.nodes:
+    position = (G.nodes[node]['x'], G.nodes[node]['y'])
+    G.nodes[node]['pos'] = position
+
+for node, attrs in G.nodes(data=True):
+    N.add_node(node, **attrs)
+
+
+def on_click(event):
+    if event.button == 1 and event.inaxes is not None:
+        x, y = event.xdata, event.ydata
+        # Buscar el nodo más cercano a la posición clickeada
+        min_dist = float('inf')
+        selected_node = None
+        for node, (ntx, ny) in nx.get_node_attributes(G, 'pos').items():
+            dist = (x - ntx) ** 2 + (y - ny) ** 2
+            if dist < min_dist:
+                min_dist = dist
+                selected_node = node
+        if selected_node is not None:
+            print(f'Nodo seleccionado: {selected_node}')
+
+
+# Dibujar solo los nodos con detalles mínimos
+plt.figure(figsize=(8, 6))
+pos = nx.get_node_attributes(N, 'pos')
+nx.draw_networkx_nodes(
+    N, pos=pos, node_size=10, alpha=0.5,
+    node_color='skyblue'
+)
+plt.title('Manizales')
+
+# Registrar el manejador de eventos de clic
+plt.gcf().canvas.mpl_connect('button_press_event', on_click)
+
+plt.axis('off')  # Ocultar ejes
+plt.show()
+
+
+# nodos_df = ox.graph_to_gdfs(G, edges=False)
+
+
 
 
 
