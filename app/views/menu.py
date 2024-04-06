@@ -73,6 +73,14 @@ class Menu:
                 if st.button('Hallar ruta más corta'):
                     self.shortest_path(origen, destino)
                     self.gifs_generated = False  # Reset the state after calculating the route
+                elif st.button('Hallar ruta más rapida'):
+                    self.fastest_path(origen, destino)
+                elif st.button('Hallar ruta con menor consumo de combustible'):
+                    self.less_fuel_path(origen, destino)
+                elif st.button('Hallar ruta más económica para el pasajero'):
+                    self.less_cost_path(origen, destino)
+                elif st.button('Hacer un Tour trip'):
+                    self.tour_trip(origen, destino)
 
         # Espacio entre secciones
         st.write('---')
