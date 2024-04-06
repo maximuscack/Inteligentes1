@@ -1,5 +1,5 @@
-from app.models.arco import Arco
-from app.models.nodo import Nodo
+from models.arco import Arco
+from models.nodo import Nodo
 
 
 class Grafo:

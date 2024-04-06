@@ -44,8 +44,6 @@ for edge in G.edges:
     G.edges[edge]['weight'] = G.edges[edge]['length'] / maxspeed
 
 
-
-
 '''
 Útiles visuales
 '''
@@ -84,7 +82,8 @@ def plot_graph():
         edge_color=[G.edges[edge]['color'] for edge in G.edges],
         edge_alpha=[G.edges[edge]['alpha'] for edge in G.edges],
         edge_linewidth=[G.edges[edge]['linewidth'] for edge in G.edges],
-        node_color=[G.nodes[node].get('node_color', '#e8a900') for node in G.nodes],
+        node_color=[G.nodes[node].get('node_color', '#e8a900')
+                    for node in G.nodes],
         bgcolor='#18080e'
     )
 
@@ -214,8 +213,9 @@ def reconstruct_path(orig, dest, plot=False, algorithm=None):
 start = random.choice(list(G.nodes))
 end = random.choice(list(G.nodes))
 
-#a_star(start, end, plot=True)
-#reconstruct_path(start, end, plot=True)
+# a_star(start, end, plot=True)
+# reconstruct_path(start, end, plot=True)
+
 
 def add_node_sizes(default_size=10):
     '''
@@ -224,6 +224,7 @@ def add_node_sizes(default_size=10):
     for node in G.nodes:
         if 'size' not in G.nodes[node]:
             G.nodes[node]['size'] = default_size
+
 
 def style_traffic_lights(default_color='green', default_linewidth=1):
     '''
@@ -251,11 +252,14 @@ def style_traffic_lights(default_color='green', default_linewidth=1):
 
     for edge in G.edges:
         if 'color' not in G.edges[edge]:
-            G.edges[edge]['color'] = '#d36206'  # Define un color predeterminado para los bordes
+            # Define un color predeterminado para los bordes
+            G.edges[edge]['color'] = '#d36206'
         if 'alpha' not in G.edges[edge]:
-            G.edges[edge]['alpha'] = 1  # Define un valor predeterminado para la transparencia de los bordes
+            # Define un valor predeterminado para la transparencia de los bordes
+            G.edges[edge]['alpha'] = 1
         if 'linewidth' not in G.edges[edge]:
-            G.edges[edge]['linewidth'] = default_linewidth  # Define un ancho de línea predeterminado para los bordes
+            # Define un ancho de línea predeterminado para los bordes
+            G.edges[edge]['linewidth'] = default_linewidth
 
 
 def a_star_traffic_lights(orig, dest, plot=False):
@@ -284,10 +288,13 @@ def a_star_traffic_lights(orig, dest, plot=False):
             neighbor = edge[1]
             tentative_g_score = G.nodes[node]['g_score'] + \
                 distance(node, neighbor)
-            travel_time = G.edges[(node, neighbor, 0)]['weight']  # considera el tiempo de viaje en función de la distancia y la velocidad máxima
+            # considera el tiempo de viaje en función de la distancia y la velocidad máxima
+            travel_time = G.edges[(node, neighbor, 0)]['weight']
             # Añade el tiempo de espera en semáforos al tiempo de viaje
-            travel_time += G.edges[(node, neighbor, 0)].get('traffic_light_wait', 0)
-            tentative_g_score += G.edges[(node, neighbor, 0)].get('traffic_light_wait', 0)
+            travel_time += G.edges[(node, neighbor, 0)
+                                   ].get('traffic_light_wait', 0)
+            tentative_g_score += G.edges[(node, neighbor, 0)
+                                         ].get('traffic_light_wait', 0)
             if tentative_g_score < G.nodes[neighbor]['g_score']:
                 G.nodes[neighbor]['previous'] = node
                 G.nodes[neighbor]['g_score'] = tentative_g_score
@@ -298,6 +305,7 @@ def a_star_traffic_lights(orig, dest, plot=False):
                     style_active_edge((edge2[0], edge2[1], 0))
         step += 1
 
+
 # Antes de trazar el grafo, asegúrate de que todos los nodos tengan el atributo 'size' definido
 add_node_sizes()
 style_traffic_lights()
@@ -306,20 +314,48 @@ style_traffic_lights()
 # Trama el grafo
 plot_graph()
 
-#a_star_traffic_lights(start, end, plot=True)
+# a_star_traffic_lights(start, end, plot=True)
 
 
-#--------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------
 
-# Implementación del algoritmo BFS para encontrar un camino que pase por todos los sitios turísticos
+
+def add_node_sizes(default_size=10):
+    '''
+    Agrega el atributo 'size' a todos los nodos con un valor predeterminado.
+    '''
+    for node in G.nodes:
+        if 'size' not in G.nodes[node]:
+            G.nodes[node]['size'] = default_size
+
+def style_traffic_lights(default_color='green', default_linewidth=1):
+    '''
+    Modifica el color de los nodos que representan semáforos y agrega el atributo 'color', 'alpha' y 'linewidth' a los bordes.
+    '''
+    for node, data in G.nodes(data=True):
+        if random.random() < 0.15:
+            G.nodes[node]['semaforo_rojo'] = True
+            G.nodes[node]['tiempo'] = 10
+            G.nodes[node]['node_color'] = default_color
+
+        if random.random() < 0.0125:
+            G.nodes[node]['es_turistico'] = True
+            G.nodes[node]['node_color'] = '#FA0AFA'
+
+    for edge in G.edges:
+        if 'color' not in G.edges[edge]:
+            G.edges[edge]['color'] = '#d36206'  # Define un color predeterminado para los bordes
+        if 'linewidth' not in G.edges[edge]:
+            G.edges[edge]['linewidth'] = default_linewidth  # Define un ancho de línea predeterminado para los bordes
+
 def bfs_turisticos(origen):
     visitados = set()  # Conjunto de nodos visitados
     turisticos = set()  # Conjunto de nodos turísticos
     for node, data in G.nodes(data=True):
-        
+
         if 'es_turistico' in data:
             print(node, data)
-            #if G[node]["es_turistico"] == True:
+            # if G[node]["es_turistico"] == True:
             turisticos.add(node)
 
     # Creamos una cola para el BFS
@@ -359,16 +395,19 @@ if camino_turisticos is not None:
         if 'color' in G.edges[edge]:
             G.edges[edge]['color'] = 'red'
         else:
-            G.edges[edge]['color'] = 'default_color'  # Color predeterminado si no está definido
+            # Color predeterminado si no está definido
+            G.edges[edge]['color'] = 'default_color'
         G.edges[edge]['linewidth'] = 3
 
     # Crear la lista de colores de los bordes con una verificación de la existencia de la clave 'color'
-    edge_color = [G.edges[edge].get('color', 'default_color') for edge in G.edges]
+    edge_color = [G.edges[edge].get('color', 'default_color')
+                  for edge in G.edges]
 
     # Crear la lista de anchos de los bordes con una verificación de la existencia de la clave 'linewidth'
     edge_linewidth = [G.edges[edge].get('linewidth', 1) for edge in G.edges]
 
     # Dibujar el grafo con los bordes coloreados y con sus anchos definidos
-    ox.plot_graph(G, node_size=10, edge_color=edge_color, edge_linewidth=edge_linewidth)
+    ox.plot_graph(G, node_size=10, edge_color=edge_color,
+                  edge_linewidth=edge_linewidth)
 else:
     print("No se pudo encontrar un camino que pase por todos los sitios turísticos.")
