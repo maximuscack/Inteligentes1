@@ -246,7 +246,8 @@ def main():
 
         if images:
             imageio.mimsave(os.path.join(
-                IMAGES_DIR, 'animation.gif'), images, fps=3)
+                IMAGES_DIR, 'animation.gif'), images, fps=3
+            )
             st.image(os.path.join(IMAGES_DIR, 'animation.gif'))
         else:
             print("Error: No hay imágenes para crear la animación")

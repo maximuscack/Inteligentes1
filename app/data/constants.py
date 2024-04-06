@@ -2,7 +2,10 @@ CAMPOS_SEMAFORO = ['habilitado', 'en_rojo', 'tiempo_por_estado']
 
 CIUDAD_MANIZALES_GRAPHML = 'app/data/mapas/manizales.graphml'
 
-BARRIOS = [
+CIUDAD_MANIZALES_DIR = 'app/data/mapas/'
+IMAGES_DIR = 'app/data/images'
+
+NOMBRES_BARRIOS = [
     'Comuna Cumanday', 'Comuna La Macarena',
     'Comuna Palogrande', 'Comuna La Fuente',
     'Comuna San José', 'Comuna Nuevo Horizonte',
