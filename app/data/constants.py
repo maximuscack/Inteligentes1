@@ -10,6 +10,7 @@ CIUDAD_MANIZALES_DIR = 'app/data/mapas/'
 
 # Directorio donde se almacenan las imágenes
 IMAGES_DIR = 'app/data/images'
+ROAD_DIR = 'app/data/routes'
 
 # Lista de nombres de barrios en la ciudad de Manizales
 NOMBRES_BARRIOS = [

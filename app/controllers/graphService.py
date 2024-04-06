@@ -74,14 +74,15 @@ class GraphService:
                 elif isinstance(maxspeed, str):
                     maxspeed = int(maxspeed)
 
-            """ From A* """
-            
-            
+            self._G.edges[edge]['maxspeed'] = maxspeed
+            self._G.edges[edge]['weight'] =\
+                self._G.edges[edge]['length'] / maxspeed
+
+            ''' From A* '''
 
             self._G.edges[edge]['color'] = '#d36206'
             self._G.edges[edge]['alpha'] = 0.2
             self._G.edges[edge]['linewidth'] = 0.5
-            self._G.edges[edge]['maxspeed'] = maxspeed
 
         for node in self._G.nodes:
             self._G.nodes[node]['previous'] = None
