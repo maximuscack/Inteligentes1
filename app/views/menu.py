@@ -1,14 +1,16 @@
 import os
+import time
 import imageio
 from streamlit_folium import folium_static
 import osmnx as ox
 import streamlit as st
 from networkx import MultiDiGraph
 
+
 from models.algorithm import Algorithm
 from controllers.graphService import GraphService
 from data.constants import (
-    NOMBRES_BARRIOS, IMAGES_DIR, CIUDAD_MANIZALES_DIR
+    NOMBRES_BARRIOS, IMAGES_DIR, ROAD_DIR
 )
 
 
@@ -43,67 +45,89 @@ class Menu:
 
         self.graficar_mapa(mapa)
 
-        # print('\n\n',[
-        #     node
-        #     for node in self._G.nodes(data=True)
-        # ])
-
         st.title('Encuentra tu ruta')
         col1, col2 = st.columns(2)
 
         with col1:
-            origen = st.text_input('Origen', '')
-        with col2:
             destino = st.text_input('Destino', '')
+        with col2:
+            origen = st.text_input('Origen', '')
 
-        if (origen != '' and destino != '') and st.button('Hallar ruta'):
-            self.limpiar_carpeta()
+        if (origen != '' and destino != ''):
+            origen, destino = int(origen), int(destino)
+            if st.button('Hallar ruta más corta'):
+                self.shortest_path(origen, destino)
+            elif st.button('Hallar ruta más rapida'):
+                self.fastest_path(origen, destino)
+            elif st.button('Hallar ruta con menor consumo de combustible'):
+                self.less_fuel_path(origen, destino)
+            elif st.button('Hallar ruta más económica para el pasajero'):
+                self.less_cost_path(origen, destino)
+            elif st.button('Hacer un Tour trip'):
+                self.tour_trip(origen, destino)
 
-            origen = int(origen)
-            destino = int(destino)
+    def shortest_path(self, origen: int, destino: int):
+        self.limpiar_carpeta()
 
-            self.aService.a_star(
-                origen, destino
-            )
-            # reconstruct_path(graph, origen, destino, plot=True)
+        # Ejecutar el algoritmo A*
+        self.aService.a_star(origen, destino)
 
-            image_files = [
-                f'{IMAGES_DIR}/image_{i}.png'
-                for i in range(len(os.listdir(IMAGES_DIR)))
-            ]
+        # Reconstruir el camino y guardar las imágenes del proceso
+        self.aService.reconstruct_path(origen, destino)
 
-            images = []
-            for filename in image_files:
-                if os.path.exists(filename):
-                    images.append(imageio.imread(filename))
-                else:
-                    print(f"Error: No se pudo encontrar el archivo {filename}")
+        # Obtener las imágenes generadas durante el algoritmo
+        tree_files = [
+            f'{IMAGES_DIR}/image_{i}.png'
+            for i in range(len(os.listdir(IMAGES_DIR)))
+        ]
 
-            print('images:', images)
+        # Crear el GIF del proceso del algoritmo A*
+        animation_path = f'{IMAGES_DIR}/animation.gif'
+        imageio.mimsave(animation_path,
+                        [imageio.imread(file) for file in tree_files],
+                        fps=3)
+        st.title('Animación del algoritmo')
+        st.image(animation_path, caption='Animación del algoritmo A*')
 
-            if images:
-                animation_path = f'{IMAGES_DIR}/animation.gif'
-                imageio.mimsave(
-                    animation_path,
-                    images, fps=3
-                )
-                self.render_animation(image_files)
+        # Obtener las imágenes del camino reconstruido
+        route_files = [
+            f'{ROAD_DIR}/image_{i}.png'
+            for i in range(len(os.listdir(ROAD_DIR)) - 1)
+        ]
 
-            else:
-                print("Error: No hay imágenes para crear la animación")
+        # Crear el GIF del camino reconstruido
+        road_animation_path = f'{ROAD_DIR}/image_animation.gif'
+        imageio.mimsave(road_animation_path,
+                        [imageio.imread(file) for file in route_files],
+                        fps=3)
+        st.title('Animación del camino más corto')
+        st.image(road_animation_path, caption='Animación del camino más corto')
 
-    def render_animation(self, image_files):
-        animation = st.empty()
-        while True:
-            for filename in image_files:
-                if os.path.exists(filename):
-                    image = imageio.imread(filename)
-                    animation.image(
-                        image, caption='Animation',
-                        use_column_width=True
-                    )
-                else:
-                    print(f"Error: No se pudo encontrar el archivo {filename}")
+    def fastest_path(self, origen: int, destino: int):
+        pass
+
+    def less_fuel_path(self, origen: int, destino: int):
+        pass
+
+    def less_cost_path(self, origen: int, destino: int):
+        pass
+
+    def tour_trip(self, origen: int, destino: int):
+        pass
+
+    # def render_animation(self, image_files):
+    #     animation = st.empty()
+    #     # while True:
+    #     for filename in image_files:
+    #         time.sleep(0.5)
+    #         if os.path.exists(filename):
+    #             image = imageio.imread(filename)
+    #             animation.image(
+    #                 image, caption='Animation',
+    #                 use_column_width=True
+    #             )
+    #         else:
+    #             print(f"Error: No se pudo encontrar el archivo {filename}")
 
     def graficar_mapa(self, mapa):
         st.write('Mapa:')

@@ -4,6 +4,7 @@ CIUDAD_MANIZALES_GRAPHML = 'app/data/mapas/manizales.graphml'
 
 CIUDAD_MANIZALES_DIR = 'app/data/mapas/'
 IMAGES_DIR = 'app/data/images'
+ROAD_DIR = 'app/data/routes'
 
 NOMBRES_BARRIOS = [
     'Comuna Cumanday', 'Comuna La Macarena',

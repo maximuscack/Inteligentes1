@@ -1,11 +1,12 @@
 import heapq
 import os
+from matplotlib import pyplot as plt
 from networkx import MultiDiGraph
 import osmnx as ox
 
 
 from data.constants import (
-    IMAGES_DIR
+    IMAGES_DIR, ROAD_DIR
 )
 
 
@@ -20,8 +21,9 @@ class Algorithm:
 
     """ Functions """
 
-    def store_plot_graph(self, step):
-        # No es necesario crear la figura y el subplot aquí
+    def store_plot_graph(self, step: int, is_road: bool = False):
+        _, ax = plt.subplots(figsize=(10, 10))
+
         ox.plot_graph(
             self._G,
             node_size=[self._G.nodes[node]['size']
@@ -32,10 +34,22 @@ class Algorithm:
                         for edge in self._G.edges],
             edge_linewidth=[self._G.edges[edge]['linewidth']
                             for edge in self._G.edges],
-            save=True,
-            filepath=os.path.join(IMAGES_DIR, f'image_{step}.png'),
-            show=False, close=True
+            ax=ax,
         )
+
+        # Añadir el título con el número de iteración
+        ax.set_title(f'Step {step}', color='white')
+        ax.set_axis_off()
+
+        # Determinar la carpeta destino en función de la ruta
+        save_dir = IMAGES_DIR
+        if is_road:
+            save_dir = ROAD_DIR
+
+        plt.savefig(
+            os.path.join(save_dir, f'image_{step}.png'), facecolor='black'
+        )
+        plt.close(_)
 
     def euc_distance(self, node1, node2):
         x1, y1 = self._G.nodes[node1]['x'], self._G.nodes[node1]['y']
@@ -49,7 +63,6 @@ class Algorithm:
         # ])
         step = 0
         for node in self._G.nodes:
-            # print('\n', node, '\n')
             self._G.nodes[node]['previous'] = None
             self._G.nodes[node]['size'] = 0
             self._G.nodes[node]['g_score'] = float('inf')
@@ -89,42 +102,40 @@ class Algorithm:
                         )
             self.store_plot_graph(step)
             step += 1
-        # Si deseas guardar una imagen al final de la búsqueda
-        # self.store_plot_graph(step)
 
-    # def reconstruct_path(self, origen, destino, plot=False, algorithm=None):
-    #     for edge in graph.edges:
-    #         style_unvisited_edge(graph, edge)
-    #     dist = 0
-    #     speeds = []
-    #     curr = destino
-    #     step = 0
-    #     while curr != origen:
-    #         prev = graph.nodes[curr]['previous']
-    #         dist += graph.edges[(prev, curr, 0)]['length']
-    #         speeds.append(graph.edges[(prev, curr, 0)]['maxspeed'])
-    #         edge = (prev, curr, 0)
-    #         if edge in graph.edges:  # Ensure the edge exists in the graph
-    #             style_path_edge(graph, edge, step)
-    #             if algorithm:
-    #                 graph.edges[edge][f'{algorithm}_uses'] \
-    #                     = graph.edges[edge].get(f'{algorithm}_uses', 0) + 1
-    #         else:
-    #             print(f"Error: Edge {edge} not found in graph")
-    #         curr = prev
-    #         step += 1
-    #     dist /= 1000
-    #     if plot:
-    #         print(f'Distance: {dist}')
-    #         print(f'Avg. speed: {sum(speeds)/len(speeds)}')
-    #         print(f'Total time: {dist/(sum(speeds)/len(speeds)) * 60}')
-    #         plot_graph(graph, step)
+    def reconstruct_path(self, origen, destino, algorithm=None):
+        path_edges = []
+        for edge in self._G.edges:
+            self.style_unvisited_edge(edge)
+        dist = 0
+        speeds = []
+        curr = destino
+        step = 0
+        while curr != origen:
+            prev = self._G.nodes[curr]['previous']
+            dist += self._G.edges[(prev, curr, 0)]['length']
+            speeds.append(self._G.edges[(prev, curr, 0)]['maxspeed'])
+            edge = (prev, curr, 0)
+            if edge in self._G.edges:
+                self.style_path_edge(edge)
+                path_edges.append(edge)  # Agregar la arista al camino
+                if algorithm:
+                    self._G.edges[edge][f'{algorithm}_uses'] \
+                        = self._G.edges[edge].get(f'{algorithm}_uses', 0) + 1
+            else:
+                print(f"Error: Edge {edge} not found in graph")
+            curr = prev
+            self.store_plot_graph(step, is_road=True)
+            step += 1
+        dist /= 1000
+        print(f'Distance: {dist}')
+        print(f'Avg. speed: {sum(speeds)/len(speeds)}')
+        print(f'Total time: {dist/(sum(speeds)/len(speeds)) * 60}')
 
     def style_unvisited_edge(self, edge):
         self._G.edges[edge]['color'] = '#d36206'
         self._G.edges[edge]['alpha'] = 0.2
         self._G.edges[edge]['linewidth'] = 0.5
-        # plot_graph(graph)
 
     def style_visited_edge(self, edge):
         self._G.edges[edge]["color"] = "#d36206"
@@ -135,10 +146,8 @@ class Algorithm:
         self._G.edges[edge]['color'] = '#e8a900'
         self._G.edges[edge]['alpha'] = 1
         self._G.edges[edge]['linewidth'] = 1
-        # plot_graph(graph, step)
 
     def style_path_edge(self, edge):
         self._G.edges[edge]['color'] = 'white'
         self._G.edges[edge]['alpha'] = 1
         self._G.edges[edge]['linewidth'] = 1
-        # plot_graph(graph, step)
