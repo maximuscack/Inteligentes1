@@ -30,7 +30,7 @@ class Menu:
     """ Specialized methods """
 
     def render(self):
-        # st.set_page_config(layout="wide")
+        st.set_page_config(layout="wide")
 
         barrios: list[MultiDiGraph] = self.gService\
             .load_neighborhoods(NOMBRES_BARRIOS)
@@ -115,25 +115,14 @@ class Menu:
     def tour_trip(self, origen: int, destino: int):
         pass
 
-    # def render_animation(self, image_files):
-    #     animation = st.empty()
-    #     # while True:
-    #     for filename in image_files:
-    #         time.sleep(0.5)
-    #         if os.path.exists(filename):
-    #             image = imageio.imread(filename)
-    #             animation.image(
-    #                 image, caption='Animation',
-    #                 use_column_width=True
-    #             )
-    #         else:
-    #             print(f"Error: No se pudo encontrar el archivo {filename}")
-
     def graficar_mapa(self, mapa):
         st.write('Mapa:')
         folium_static(mapa)
 
     def limpiar_carpeta(self):
-        files = os.listdir(IMAGES_DIR)
-        for file in files:
+        files_tree = os.listdir(IMAGES_DIR)
+        files_path = os.listdir(ROAD_DIR)
+        for file in files_tree:
             os.remove(os.path.join(IMAGES_DIR, file))
+        for file in files_path:
+            os.remove(os.path.join(ROAD_DIR, file))
