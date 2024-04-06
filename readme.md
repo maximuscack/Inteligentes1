@@ -16,5 +16,5 @@ py -m pip install -r reqs.txt
 
 Ejecución del proyecto:
 ```bash
-py main.py
+streamlit run .\app\main.py
 ```
