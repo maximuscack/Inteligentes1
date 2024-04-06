@@ -32,39 +32,78 @@ class Menu:
     def render(self):
         st.set_page_config(layout="wide")
 
-        barrios: list[MultiDiGraph] = self.gService\
-            .load_neighborhoods(NOMBRES_BARRIOS)
-
+        # Cargar datos del mapa
+        barrios: list[MultiDiGraph] = self.gService.load_neighborhoods(NOMBRES_BARRIOS)
         st.title('Selecciona un barrio para mostrar su gráfico:')
         barrio_selec = st.selectbox('Barrios', NOMBRES_BARRIOS)
-
         mapa, graph = self.gService.load_neighbor_data(barrio_selec, barrios)
         self.set_graph(graph)
-
         self.gService.reset_graph()
 
-        self.graficar_mapa(mapa)
-
-        st.title('Encuentra tu ruta')
-        col1, col2 = st.columns(2)
-
+        # Mostrar mapa en una columna y campos de entrada en la otra
+        col1, col2 = st.columns([3, 2])  # Ajustar anchos de columnas según necesidad
         with col1:
-            destino = st.text_input('Destino', '')
-        with col2:
-            origen = st.text_input('Origen', '')
+            self.graficar_mapa(mapa)
 
-        if (origen != '' and destino != ''):
-            origen, destino = int(origen), int(destino)
-            if st.button('Hallar ruta más corta'):
-                self.shortest_path(origen, destino)
-            elif st.button('Hallar ruta más rapida'):
-                self.fastest_path(origen, destino)
-            elif st.button('Hallar ruta con menor consumo de combustible'):
-                self.less_fuel_path(origen, destino)
-            elif st.button('Hallar ruta más económica para el pasajero'):
-                self.less_cost_path(origen, destino)
-            elif st.button('Hacer un Tour trip'):
-                self.tour_trip(origen, destino)
+        with col2:
+            st.title('Encuentra tu ruta')
+            origen = st.text_input('Origen', '')
+            destino = st.text_input('Destino', '')
+            if (origen != '' and destino != ''):
+                origen, destino = int(origen), int(destino)
+                if st.button('Hallar ruta más corta'):
+                    self.shortest_path(origen, destino)
+
+        # Espacio entre secciones
+        st.write('---')
+
+        # Mostrar animaciones en una fila
+        col3, col4 = st.columns(2)
+        with col3:
+            st.title('Animación del algoritmo A*')
+            st.image(f'{IMAGES_DIR}/animation.gif', caption='Animación del algoritmo A*')
+
+        with col4:
+            st.title('Animación del camino más corto')
+            st.image(f'{ROAD_DIR}/image_animation.gif', caption='Animación del camino más corto')
+
+
+    # def rendere(self):
+    #     st.set_page_config(layout="wide")
+
+    #     barrios: list[MultiDiGraph] = self.gService\
+    #         .load_neighborhoods(NOMBRES_BARRIOS)
+
+    #     st.title('Selecciona un barrio para mostrar su gráfico:')
+    #     barrio_selec = st.selectbox('Barrios', NOMBRES_BARRIOS)
+
+    #     mapa, graph = self.gService.load_neighbor_data(barrio_selec, barrios)
+    #     self.set_graph(graph)
+
+    #     self.gService.reset_graph()
+
+    #     self.graficar_mapa(mapa)
+
+    #     st.title('Encuentra tu ruta')
+    #     col1, col2 = st.columns(2)
+
+    #     with col1:
+    #         destino = st.text_input('Destino', '')
+    #     with col2:
+    #         origen = st.text_input('Origen', '')
+
+    #     if (origen != '' and destino != ''):
+    #         origen, destino = int(origen), int(destino)
+    #         if st.button('Hallar ruta más corta'):
+    #             self.shortest_path(origen, destino)
+    #         # elif st.button('Hallar ruta más rapida'):
+    #         #     self.fastest_path(origen, destino)
+    #         # elif st.button('Hallar ruta con menor consumo de combustible'):
+    #         #     self.less_fuel_path(origen, destino)
+    #         # elif st.button('Hallar ruta más económica para el pasajero'):
+    #         #     self.less_cost_path(origen, destino)
+    #         # elif st.button('Hacer un Tour trip'):
+    #         #     self.tour_trip(origen, destino)
 
     def shortest_path(self, origen: int, destino: int):
         self.limpiar_carpeta()
