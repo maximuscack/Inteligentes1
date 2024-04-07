@@ -21,22 +21,6 @@ class Menu:
         self._G: MultiDiGraph = MultiDiGraph()
         self.gService: GraphService = GraphService(self._G)
         self.aService: Algorithm = Algorithm(self._G)
-
-    def set_graph(self, graph: MultiDiGraph) -> None:
-        self._G = graph
-        self.gService.set_graph(graph)
-        self.aService.set_graph(graph)
-
-    """ Specialized methods """
-
-
-class Menu:
-    ''' Class Menu is used to render to user. '''
-
-    def __init__(self) -> None:
-        self._G: MultiDiGraph = MultiDiGraph()
-        self.gService: GraphService = GraphService(self._G)
-        self.aService: Algorithm = Algorithm(self._G)
         self.gifs_generated = False  # State to track if GIFs are already generated
 
     def set_graph(self, graph: MultiDiGraph) -> None:
@@ -75,19 +59,29 @@ class Menu:
                     value=100
                 )
 
-                origen, destino, eficiencia = int(
-                    origen), int(destino), float(eficiencia)
+                origen, destino, eficiencia =\
+                    int(origen), int(destino), float(eficiencia)
+
                 if st.button('Hallar ruta más corta'):
                     self.shortest_path(origen, destino)
-                    self.gifs_generated = False  # Reset the state after calculating the route
-                elif st.button('Hallar ruta más rapida'):
+                    # Reset the state after calculating the route
+                    self.gifs_generated = False
+
+                elif st.button('Hallar ruta más rapida con semáforos'):
                     self.fastest_path(origen, destino)
+                    self.gifs_generated = False
+
                 elif st.button('Hallar ruta con menor consumo de combustible'):
                     self.less_fuel_path(origen, destino, eficiencia)
+                    self.gifs_generated = False
+
                 elif st.button('Hallar ruta más económica para el pasajero'):
                     self.less_cost_path(origen, destino)
+                    self.gifs_generated = False
+
                 elif st.button('Hacer un Tour trip'):
                     self.tour_trip(origen, destino)
+                    self.gifs_generated = False
 
         # Espacio entre secciones
         st.write('---')
@@ -96,14 +90,14 @@ class Menu:
         if not self.gifs_generated:
             col3, col4 = st.columns(2)
             with col3:
-                st.title('Animación del algoritmo A*')
-                st.image(f'{IMAGES_DIR}/animation.gif',
-                         caption='Animación del algoritmo A*')
+                st.title('Animación del algoritmo')
+                st.image(f'{IMAGES_DIR}/image_animation.gif',
+                         caption='Animación del algoritmo buscando.')
 
             with col4:
                 st.title('Animación del camino más corto')
                 st.image(f'{ROAD_DIR}/image_animation.gif',
-                         caption='Animación del camino más corto')
+                         caption='Animación de reconstrucción del camino.')
 
             self.gifs_generated = True  # Set the state to True after showing the GIFs
 
@@ -116,7 +110,7 @@ class Menu:
         # Reconstruir el camino y guardar las imágenes del proceso
         self.aService.reconstruct_path(origen, destino)
 
-        # Obtener las imágenes generadas durante el algoritmo
+        """ Obtener las imágenes generadas durante el algoritmo """
         tree_files = [
             f'{IMAGES_DIR}/image_{i}.png'
             for i in range(len(os.listdir(IMAGES_DIR)))
@@ -124,7 +118,7 @@ class Menu:
 
         # Crear el GIF del proceso del algoritmo A*
         if len(tree_files) > 0:
-            animation_path = f'{IMAGES_DIR}/animation.gif'
+            animation_path = f'{IMAGES_DIR}/image_animation.gif'
             imageio.mimsave(animation_path,
                             [imageio.imread(file) for file in tree_files],
                             fps=3)
@@ -143,13 +137,75 @@ class Menu:
                             fps=3)
 
     def fastest_path(self, origen: int, destino: int):
-        pass
+        self.limpiar_carpeta()
+
+        # Ejecutar el algoritmo A*
+        self.aService.a_star_traffic_lights(origen, destino)
+
+        # Reconstruir el camino y guardar las imágenes del proceso
+        self.aService.reconstruct_path(origen, destino)
+
+        """ Obtener las imágenes generadas durante el algoritmo """
+
+        tree_files = [
+            f'{IMAGES_DIR}/image_{i}.png'
+            for i in range(len(os.listdir(IMAGES_DIR)))
+        ]
+
+        # Crear el GIF del proceso del algoritmo A*
+        if len(tree_files) > 0:
+            animation_path = f'{IMAGES_DIR}/image_animation.gif'
+            imageio.mimsave(animation_path,
+                            [imageio.imread(file) for file in tree_files],
+                            fps=3)
+
+        # Obtener las imágenes del camino reconstruido
+        route_files = [
+            f'{ROAD_DIR}/image_{i}.png'
+            for i in range(len(os.listdir(ROAD_DIR)))
+        ]
+
+        # Crear el GIF del camino reconstruido
+        if len(route_files) > 0:
+            road_animation_path = f'{ROAD_DIR}/image_animation.gif'
+            imageio.mimsave(road_animation_path,
+                            [imageio.imread(file) for file in route_files],
+                            fps=3)
 
     def less_fuel_path(self, origen: int, destino: int, eficiencia: float):
         self.limpiar_carpeta()
 
-        # Ejecutar el algoritmo Dijkstra
-        self.aService.dijkstra_less_fuel_path(origen, destino, 100)
+        # Ejecutar el algoritmo Dijkstra con eficiencia de combustible
+        self.aService.dijkstra_less_fuel_path(origen, destino, eficiencia)
+
+        # Reconstruir el camino y guardar las imágenes del proceso
+        self.aService.reconstruct_path(origen, destino)
+
+        """ Obtener las imágenes generadas durante el algoritmo """
+        tree_files = [
+            f'{IMAGES_DIR}/image_{i}.png'
+            for i in range(len(os.listdir(IMAGES_DIR)))
+        ]
+
+        # Crear el GIF del proceso del algoritmo Dijkstra
+        if len(tree_files) > 0:
+            animation_path = f'{IMAGES_DIR}/image_animation.gif'
+            imageio.mimsave(animation_path,
+                            [imageio.imread(file) for file in tree_files],
+                            fps=3)
+
+        # Obtener las imágenes del camino reconstruido
+        route_files = [
+            f'{ROAD_DIR}/image_{i}.png'
+            for i in range(len(os.listdir(ROAD_DIR)))
+        ]
+
+        # Crear el GIF del camino reconstruido
+        if len(route_files) > 0:
+            road_animation_path = f'{ROAD_DIR}/image_animation.gif'
+            imageio.mimsave(road_animation_path,
+                            [imageio.imread(file) for file in route_files],
+                            fps=3)
 
     def less_cost_path(self, origen: int, destino: int):
         pass

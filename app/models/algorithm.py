@@ -24,8 +24,17 @@ class Algorithm:
     def store_plot_graph(self, step: int, is_road: bool = False):
         _, ax = plt.subplots(figsize=(10, 10))
 
+        # print('COLOR')
+
+        colors = []
+        for node in self._G.nodes:
+            if 'color' in self._G.nodes[node]:
+                colors.append(self._G.nodes[node]['color'])
+            else:
+                colors.append(None)
         ox.plot_graph(
             self._G,
+            node_color=colors,
             node_size=[self._G.nodes[node]['size']
                        for node in self._G.nodes],
             edge_color=[self._G.edges[edge]['color']
@@ -154,10 +163,62 @@ class Algorithm:
             self.store_plot_graph(step)
             step += 1
 
+    """ Segundo punto """
+
+    def a_star_traffic_lights(self, orig: int, dest: int):
+        for node in self._G.nodes:
+            self._G.nodes[node]['previous'] = None
+            self._G.nodes[node]['size'] = 0
+            self._G.nodes[node]['g_score'] = float('inf')
+            self._G.nodes[node]['f_score'] = float('inf')
+        for edge in self._G.edges:
+            self.style_unvisited_edge(edge)
+        self._G.nodes[orig]['size'] = 50
+        self._G.nodes[dest]['size'] = 50
+        self._G.nodes[orig]['g_score'] = 0
+        self._G.nodes[orig]['f_score'] = self.euc_distance(orig, dest)
+        pq = [(self._G.nodes[orig]['f_score'], orig)]
+        step = 0
+        while pq:
+            _, node = heapq.heappop(pq)
+            if node == dest:
+                # if plot:
+                print('Iteraciones:', step)
+                self.store_plot_graph(step)
+                return
+            for edge in self._G.out_edges(node):
+                self.style_visited_edge((edge[0], edge[1], 0))
+                neighbor = edge[1]
+                tentative_g_score = self._G.nodes[node]['g_score'] + \
+                    self.euc_distance(node, neighbor)
+                # considera el tiempo de viaje en función de la distancia y la velocidad máxima
+                travel_time = self._G.edges[(node, neighbor, 0)]['weight']
+                # Añade el tiempo de espera en semáforos al tiempo de viaje
+                travel_time +=\
+                    self._G.edges[(node, neighbor, 0)]\
+                    .get('traffic_light_wait', 0)
+                tentative_g_score +=\
+                    self._G.edges[(node, neighbor, 0)]\
+                    .get('traffic_light_wait', 0)
+
+                if tentative_g_score < self._G.nodes[neighbor]['g_score']:
+                    self._G.nodes[neighbor]['previous'] = node
+                    self._G.nodes[neighbor]['g_score'] = tentative_g_score
+                    self._G.nodes[neighbor]['f_score'] =\
+                        tentative_g_score + self.euc_distance(neighbor, dest)
+                    heapq.heappush(
+                        pq, (self._G.nodes[neighbor]['f_score'], neighbor)
+                    )
+                    for edge2 in self._G.out_edges(neighbor):
+                        self.style_active_edge((edge2[0], edge2[1], 0))
+            self.store_plot_graph(step)
+            step += 1
+        print(travel_time)
+
     """ Tercer punto """
 
     def dijkstra_less_fuel_path(
-            self, orig, dest, fuel_efficiency, plot=False
+            self, orig: int, dest: int, fuel_efficiency: float
     ):
         visited = set()  # Conjunto de nodos visitados
         total_fuel_consumed = 0  # Total de combustible consumido
@@ -204,7 +265,7 @@ class Algorithm:
                         f'Used {fuel_used: .2f} gallons of fuel for edge {edge}'
                     )
 
-                step += 1
                 self.store_plot_graph(step)
+                step += 1
 
             print(f'total = {total_fuel_consumed:.2f} gallons')
