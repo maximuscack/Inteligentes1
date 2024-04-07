@@ -1,12 +1,14 @@
 import heapq
 import os
+import random
 from matplotlib import pyplot as plt
 from networkx import MultiDiGraph
+import networkx as nx
 import osmnx as ox
 
 
 from data.constants import (
-    IMAGES_DIR, ROAD_DIR
+    BLACK_NODE, BLUE_NODE, GREEN_NODE, IMAGES_DIR, RED_NODE, ROAD_DIR, WHITE_NODE
 )
 
 
@@ -22,19 +24,15 @@ class Algorithm:
     """ Functions """
 
     def store_plot_graph(self, step: int, is_road: bool = False):
+
+        # for node in self._G.nodes:
+        #     if self._G.nodes[node]['color'] == RED_NODE or self._G.nodes[node]['color'] == GREEN_NODE:
+        #         print(self._G.nodes[node])
+
         _, ax = plt.subplots(figsize=(10, 10))
 
-        # print('COLOR')
-
-        colors = []
-        for node in self._G.nodes:
-            if 'color' in self._G.nodes[node]:
-                colors.append(self._G.nodes[node]['color'])
-            else:
-                colors.append(None)
         ox.plot_graph(
             self._G,
-            node_color=colors,
             node_size=[self._G.nodes[node]['size']
                        for node in self._G.nodes],
             edge_color=[self._G.edges[edge]['color']
@@ -43,12 +41,23 @@ class Algorithm:
                         for edge in self._G.edges],
             edge_linewidth=[self._G.edges[edge]['linewidth']
                             for edge in self._G.edges],
+            node_color=[self._G.nodes[node]['color']
+                        for node in self._G.nodes],
+            bgcolor="#18080e",
             ax=ax,
         )
 
         # Añadir el título con el número de iteración
         ax.set_title(f'Step {step}', color='white')
         ax.set_axis_off()
+
+        # Agregar etiquetas a los nodos
+        for node, data in self._G.nodes(data=True):
+            if 'tiempo' in data:
+                ax.annotate(self._G.nodes[node]['tiempo'],
+                            (data['x'], data['y']), color='white')
+            else:
+                ax.annotate(None, (data['x'], data['y']), color='white')
 
         # Determinar la carpeta destino en función de la ruta
         save_dir = IMAGES_DIR
@@ -117,10 +126,6 @@ class Algorithm:
     """ Primer punto """
 
     def a_star_shortest_path(self, origen, destino):
-        # print('\n\nGRAPH::', [
-        #     node
-        #     for node in self._G.nodes(data=True)
-        # ])
         step = 0
         for node in self._G.nodes:
             self._G.nodes[node]['previous'] = None
@@ -129,17 +134,21 @@ class Algorithm:
             self._G.nodes[node]['f_score'] = float('inf')
         for edge in self._G.edges:
             self.style_unvisited_edge(edge)
-        self._G.nodes[origen]['size'] = 50
-        self._G.nodes[destino]['size'] = 50
-        self._G.nodes[origen]['g_score'] = 0
         self._G.nodes[origen]['f_score'] = self.euc_distance(
             origen, destino
         )
+        self._G.nodes[origen]['color'] = '#ffffff'
+        self._G.nodes[origen]['size'] = 50
+        self._G.nodes[origen]['g_score'] = 0
+
+        self._G.nodes[destino]['color'] = '#ffffff'
+        self._G.nodes[destino]['size'] = 50
         pq = [(self._G.nodes[origen]['f_score'], origen)]
         while pq:
             _, node = heapq.heappop(pq)
             if node == destino:
-                print('Iteraciones:', step)
+                print('Iters:', step)
+
                 self.store_plot_graph(step)
                 return
             for edge in self._G.out_edges(node):
@@ -165,23 +174,55 @@ class Algorithm:
 
     """ Segundo punto """
 
-    def a_star_traffic_lights(self, orig: int, dest: int):
+    def a_star_traffic_lights(self, origen: int, destino: int):
+
         for node in self._G.nodes:
             self._G.nodes[node]['previous'] = None
-            self._G.nodes[node]['size'] = 0
             self._G.nodes[node]['g_score'] = float('inf')
             self._G.nodes[node]['f_score'] = float('inf')
+
+            if random.random() < 0.15:
+                self._G.nodes[node]['tiempo'] = random.randint(1, 10)
+                self._G.nodes[node]['color'] = RED_NODE
+
+                if random.random() < 0.5:
+                    self._G.nodes[node]['color'] = GREEN_NODE
+
+            if random.random() < 0.0125:
+                self._G.nodes[node]['es_turistico'] = True
+                self._G.nodes[node]['color'] = BLUE_NODE
+
         for edge in self._G.edges:
             self.style_unvisited_edge(edge)
-        self._G.nodes[orig]['size'] = 50
-        self._G.nodes[dest]['size'] = 50
-        self._G.nodes[orig]['g_score'] = 0
-        self._G.nodes[orig]['f_score'] = self.euc_distance(orig, dest)
-        pq = [(self._G.nodes[orig]['f_score'], orig)]
+        self._G.nodes[origen]['f_score'] = self.euc_distance(origen, destino)
+        self._G.nodes[origen]['color'] = WHITE_NODE
+        self._G.nodes[origen]['size'] = 50
+        self._G.nodes[origen]['g_score'] = 0
+        self._G.nodes[destino]['color'] = WHITE_NODE
+        self._G.nodes[destino]['size'] = 50
+
+        # print('LLAVES1::', set([
+        #     self._G.nodes[node]['color'] for node in self._G.nodes
+        # ]))
+
+        pq = [(self._G.nodes[origen]['f_score'], origen)]
         step = 0
+        self.store_plot_graph(step)
+
         while pq:
+            for node in self._G.nodes:
+                if 'tiempo' in self._G.nodes[node]:
+                    self._G.nodes[node]['tiempo'] -= 1
+                    if self._G.nodes[node]['tiempo'] == 0:
+                        self._G.nodes[node]['tiempo'] = 10
+
+                        if self._G.nodes[node]['color'] == RED_NODE:
+                            self._G.nodes[node]['color'] = GREEN_NODE
+                        else:
+                            self._G.nodes[node]['color'] = RED_NODE
+
             _, node = heapq.heappop(pq)
-            if node == dest:
+            if node == destino:
                 # if plot:
                 print('Iteraciones:', step)
                 self.store_plot_graph(step)
@@ -189,6 +230,12 @@ class Algorithm:
             for edge in self._G.out_edges(node):
                 self.style_visited_edge((edge[0], edge[1], 0))
                 neighbor = edge[1]
+
+                # Check if the traffic light is green
+                if 'traffic_light_wait' in self._G.edges[(node, neighbor, 0)]:
+                    if self._G.nodes[neighbor]['color'] == RED_NODE:
+                        continue  # Skip this neighbor if the traffic light is red
+
                 tentative_g_score = self._G.nodes[node]['g_score'] + \
                     self.euc_distance(node, neighbor)
                 # considera el tiempo de viaje en función de la distancia y la velocidad máxima
@@ -205,7 +252,8 @@ class Algorithm:
                     self._G.nodes[neighbor]['previous'] = node
                     self._G.nodes[neighbor]['g_score'] = tentative_g_score
                     self._G.nodes[neighbor]['f_score'] =\
-                        tentative_g_score + self.euc_distance(neighbor, dest)
+                        tentative_g_score + \
+                        self.euc_distance(neighbor, destino)
                     heapq.heappush(
                         pq, (self._G.nodes[neighbor]['f_score'], neighbor)
                     )
@@ -218,7 +266,7 @@ class Algorithm:
     """ Tercer punto """
 
     def dijkstra_less_fuel_path(
-            self, orig: int, dest: int, fuel_efficiency: float
+            self, origen: int, destino: int, fuel_efficiency: float
     ):
         visited = set()  # Conjunto de nodos visitados
         total_fuel_consumed = 0  # Total de combustible consumido
@@ -228,14 +276,18 @@ class Algorithm:
             self._G.nodes[node]['g_score'] = float('inf')
         for edge in self._G.edges(keys=True):
             self.style_unvisited_edge(edge)
-        self._G.nodes[orig]['size'] = 50
-        self._G.nodes[dest]['size'] = 50
-        self._G.nodes[orig]['g_score'] = 0
-        pq = [(0, orig)]
+        self._G.nodes[origen]['color'] = '#ffffff'
+        self._G.nodes[origen]['size'] = 50
+        self._G.nodes[origen]['g_score'] = 0
+
+        self._G.nodes[destino]['color'] = '#ffffff'
+        self._G.nodes[destino]['size'] = 50
+
+        pq = [(0, origen)]
         step = 0
         while pq:
             _, node = heapq.heappop(pq)
-            if node == dest:
+            if node == destino:
                 print('Iteraciones:', step)
                 self.store_plot_graph(step)
                 return

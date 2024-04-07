@@ -157,7 +157,7 @@ class Menu:
             animation_path = f'{IMAGES_DIR}/image_animation.gif'
             imageio.mimsave(animation_path,
                             [imageio.imread(file) for file in tree_files],
-                            fps=3)
+                            fps=1)
 
         # Obtener las imágenes del camino reconstruido
         route_files = [
@@ -170,7 +170,7 @@ class Menu:
             road_animation_path = f'{ROAD_DIR}/image_animation.gif'
             imageio.mimsave(road_animation_path,
                             [imageio.imread(file) for file in route_files],
-                            fps=3)
+                            fps=1)
 
     def less_fuel_path(self, origen: int, destino: int, eficiencia: float):
         self.limpiar_carpeta()

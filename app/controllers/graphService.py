@@ -52,11 +52,14 @@ class GraphService:
             zoom_start=15.5,
             control_scale=True,
             zoom_control=True,
-            prefer_canvas=True
+            prefer_canvas=True,
         )
         for nodo, data in graph.nodes(data=True):
-            folium.Marker(location=(data['y'], data['x']),
-                          popup=str(nodo)).add_to(mapa)
+            folium.Marker(
+                location=(data['y'], data['x']),
+                popup=str(nodo),
+                # icon=folium.Icon(color='blue', icon='info-sign')
+            ).add_to(mapa)
         return mapa, graph
 
     def reset_graph(self):
@@ -80,59 +83,20 @@ class GraphService:
             self._G.edges[edge]['alpha'] = 0.2
             self._G.edges[edge]['linewidth'] = 0.5
 
-
         for node in self._G.nodes:
             self._G.nodes[node]['size'] = 10
+            self._G.nodes[node]['color'] = '#000000'
 
-            self._G.nodes[node]['semaforo_rojo'] = True
-            self._G.nodes[node]['tiempo'] = 10
+            # if random.random() < 0.15:
+            #     self._G.nodes[node]['tiempo'] = 10
 
-            if random.random() < 0.15:
-                self._G.nodes[node]['tiempo'] = 10
+            #     self._G.nodes[node]['semaforo_rojo'] = True
+            #     self._G.nodes[node]['color'] = '#ffcccc'
 
-                self._G.nodes[node]['semaforo_rojo'] = True
-                self._G.nodes[node]['node_color'] = 'red'
+            #     if random.random() < 0.5:
+            #         self._G.nodes[node]['semaforo_rojo'] = False
+            #         self._G.nodes[node]['color'] = '#ccffcc'
 
-                if random.random() < 0.5:
-                    self._G.nodes[node]['semaforo_rojo'] = False
-                    self._G.nodes[node]['node_color'] = 'green'
-
-            if random.random() < 0.0125:
-                self._G.nodes[node]['es_turistico'] = True
-                self._G.nodes[node]['node_color'] = 'blue'
-
-
-# def style_traffic_lights(default_color='green', default_linewidth=1):
-#     '''
-#     Modifica el color de los nodos que representan semáforos y agrega el atributo 'color', 'alpha' y 'linewidth' a los bordes.
-#     '''
-#     for node, data in G.nodes(data=True):
-#         #! Editar estilos originales.
-
-#         if random.random() < 0.15:
-#             G.nodes[node]['semaforo_rojo'] = True
-#             G.nodes[node]['tiempo'] = 10
-#             G.nodes[node]['node_color'] = default_color
-
-#         if random.random() < 0.0125:
-#             G.nodes[node]['es_turistico'] = True
-#             G.nodes[node]['node_color'] = '#FA0AFA'
-
-        # if 'traffic_light' in G.nodes[node]:
-        #     print(G.nodes[node])
-
-        # if G.nodes[node]['semaforo']:  # Verifica si el nodo tiene el atributo 'semaforo'
-            # semaforo = data['semaforo']
-            # if isinstance(semaforo, dict) and 'color' in semaforo:
-            # G.nodes[node]['node_color'] = default_color  # Cambia el color del nodo según el atributo 'color' del semáforo
-
-    # for edge in G.edges:
-    #     if 'color' not in G.edges[edge]:
-    #         # Define un color predeterminado para los bordes
-    #         G.edges[edge]['color'] = '#d36206'
-    #     if 'alpha' not in G.edges[edge]:
-    #         # Define un valor predeterminado para la transparencia de los bordes
-    #         G.edges[edge]['alpha'] = 1
-    #     if 'linewidth' not in G.edges[edge]:
-    #         # Define un ancho de línea predeterminado para los bordes
-    #         G.edges[edge]['linewidth'] = default_linewidth
+            # if random.random() < 0.0125:
+            #     self._G.nodes[node]['es_turistico'] = True
+            #     self._G.nodes[node]['color'] = '#ccccff'
