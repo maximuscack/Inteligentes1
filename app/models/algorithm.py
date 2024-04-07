@@ -51,12 +51,63 @@ class Algorithm:
         )
         plt.close(_)
 
+    def style_unvisited_edge(self, edge):
+        self._G.edges[edge]['color'] = '#d36206'
+        self._G.edges[edge]['alpha'] = 0.2
+        self._G.edges[edge]['linewidth'] = 0.5
+
+    def style_visited_edge(self, edge):
+        self._G.edges[edge]["color"] = "#d36206"
+        self._G.edges[edge]["alpha"] = 1
+        self._G.edges[edge]["linewidth"] = 1
+
+    def style_active_edge(self, edge):
+        self._G.edges[edge]['color'] = '#e8a900'
+        self._G.edges[edge]['alpha'] = 1
+        self._G.edges[edge]['linewidth'] = 1
+
+    def style_path_edge(self, edge):
+        self._G.edges[edge]['color'] = 'white'
+        self._G.edges[edge]['alpha'] = 1
+        self._G.edges[edge]['linewidth'] = 1
+
     def euc_distance(self, node1, node2):
         x1, y1 = self._G.nodes[node1]['x'], self._G.nodes[node1]['y']
         x2, y2 = self._G.nodes[node2]['x'], self._G.nodes[node2]['y']
         return ((x2 - x1)**2 + (y2 - y1)**2)**0.5
 
-    def a_star(self, origen, destino):
+    def reconstruct_path(self, origen, destino, algorithm=None):
+        path_edges = []
+        for edge in self._G.edges:
+            self.style_unvisited_edge(edge)
+        dist = 0
+        speeds = []
+        curr = destino
+        step = 0
+        while curr != origen:
+            prev = self._G.nodes[curr]['previous']
+            dist += self._G.edges[(prev, curr, 0)]['length']
+            speeds.append(self._G.edges[(prev, curr, 0)]['maxspeed'])
+            edge = (prev, curr, 0)
+            if edge in self._G.edges:
+                self.style_path_edge(edge)
+                path_edges.append(edge)  # Agregar la arista al camino
+                if algorithm:
+                    self._G.edges[edge][f'{algorithm}_uses'] \
+                        = self._G.edges[edge].get(f'{algorithm}_uses', 0) + 1
+            else:
+                print(f"Error: Edge {edge} not found in graph")
+            curr = prev
+            self.store_plot_graph(step, is_road=True)
+            step += 1
+        dist /= 1000
+        print(f'Distance: {dist}')
+        print(f'Avg. speed: {sum(speeds)/len(speeds)}')
+        print(f'Total time: {dist/(sum(speeds)/len(speeds)) * 60}')
+
+    """ Primer punto """
+
+    def a_star_shortest_path(self, origen, destino):
         # print('\n\nGRAPH::', [
         #     node
         #     for node in self._G.nodes(data=True)
@@ -103,51 +154,57 @@ class Algorithm:
             self.store_plot_graph(step)
             step += 1
 
-    def reconstruct_path(self, origen, destino, algorithm=None):
-        path_edges = []
-        for edge in self._G.edges:
+    """ Tercer punto """
+
+    def dijkstra_less_fuel_path(
+            self, orig, dest, fuel_efficiency, plot=False
+    ):
+        visited = set()  # Conjunto de nodos visitados
+        total_fuel_consumed = 0  # Total de combustible consumido
+        for node in self._G.nodes:
+            self._G.nodes[node]['previous'] = None
+            self._G.nodes[node]['size'] = 0
+            self._G.nodes[node]['g_score'] = float('inf')
+        for edge in self._G.edges(keys=True):
             self.style_unvisited_edge(edge)
-        dist = 0
-        speeds = []
-        curr = destino
+        self._G.nodes[orig]['size'] = 50
+        self._G.nodes[dest]['size'] = 50
+        self._G.nodes[orig]['g_score'] = 0
+        pq = [(0, orig)]
         step = 0
-        while curr != origen:
-            prev = self._G.nodes[curr]['previous']
-            dist += self._G.edges[(prev, curr, 0)]['length']
-            speeds.append(self._G.edges[(prev, curr, 0)]['maxspeed'])
-            edge = (prev, curr, 0)
-            if edge in self._G.edges:
-                self.style_path_edge(edge)
-                path_edges.append(edge)  # Agregar la arista al camino
-                if algorithm:
-                    self._G.edges[edge][f'{algorithm}_uses'] \
-                        = self._G.edges[edge].get(f'{algorithm}_uses', 0) + 1
-            else:
-                print(f"Error: Edge {edge} not found in graph")
-            curr = prev
-            self.store_plot_graph(step, is_road=True)
-            step += 1
-        dist /= 1000
-        print(f'Distance: {dist}')
-        print(f'Avg. speed: {sum(speeds)/len(speeds)}')
-        print(f'Total time: {dist/(sum(speeds)/len(speeds)) * 60}')
+        while pq:
+            _, node = heapq.heappop(pq)
+            if node == dest:
+                print('Iteraciones:', step)
+                self.store_plot_graph(step)
+                return
+            if node in visited:
+                continue
+            visited.add(node)
+            for edge in self._G.out_edges(node, keys=True):
+                self.style_visited_edge((edge[0], edge[1], edge[2]))
+                neighbor = edge[1]
+                edge_length = self._G.edges[edge]['length']
+                max_speed = self._G.edges[edge]['maxspeed']
+                fuel_consumption = (
+                    edge_length / (max_speed * fuel_efficiency)
+                )
+                total_fuel_consumed += fuel_consumption
+                tentative_g_score = self._G.nodes[node]['g_score'] + \
+                    fuel_consumption
+                if tentative_g_score < self._G.nodes[neighbor]['g_score']:
+                    self._G.nodes[neighbor]['previous'] = node
+                    self._G.nodes[neighbor]['g_score'] = tentative_g_score
+                    heapq.heappush(
+                        pq, (self._G.nodes[neighbor]['g_score'], neighbor))
+                    for edge2 in self._G.out_edges(neighbor, keys=True):
+                        self.style_active_edge((edge2[0], edge2[1], edge2[2]))
+                    fuel_used = fuel_consumption * fuel_efficiency
+                    print(
+                        f'Used {fuel_used: .2f} gallons of fuel for edge {edge}'
+                    )
 
-    def style_unvisited_edge(self, edge):
-        self._G.edges[edge]['color'] = '#d36206'
-        self._G.edges[edge]['alpha'] = 0.2
-        self._G.edges[edge]['linewidth'] = 0.5
+                step += 1
+                self.store_plot_graph(step)
 
-    def style_visited_edge(self, edge):
-        self._G.edges[edge]["color"] = "#d36206"
-        self._G.edges[edge]["alpha"] = 1
-        self._G.edges[edge]["linewidth"] = 1
-
-    def style_active_edge(self, edge):
-        self._G.edges[edge]['color'] = '#e8a900'
-        self._G.edges[edge]['alpha'] = 1
-        self._G.edges[edge]['linewidth'] = 1
-
-    def style_path_edge(self, edge):
-        self._G.edges[edge]['color'] = 'white'
-        self._G.edges[edge]['alpha'] = 1
-        self._G.edges[edge]['linewidth'] = 1
+            print(f'total = {total_fuel_consumed:.2f} gallons')

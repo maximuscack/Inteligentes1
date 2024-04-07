@@ -5227,7 +5227,7 @@
     </edge>
     <edge source="280881581" target="475479279" id="0">
       <data key="d8">[95839664, 39661945, 39661947]</data>
-      <data key="d11">['Calle 64B', 'Calle 65', 'Calle 64A']</data>
+      <data key="d11">['Calle 65', 'Calle 64B', 'Calle 64A']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
@@ -5693,7 +5693,7 @@
       <data key="d8">[437902531, 136037062]</data>
       <data key="d9">False</data>
       <data key="d11">Calle 60</data>
-      <data key="d12">['residential', 'steps']</data>
+      <data key="d12">['steps', 'residential']</data>
       <data key="d14">False</data>
       <data key="d15">66.094</data>
       <data key="d16">LINESTRING (-75.4887816 5.060105, -75.4885617 5.0603605, -75.4883748 5.0605389)</data>
@@ -6645,8 +6645,8 @@
     <edge source="367936027" target="1706011978" id="0">
       <data key="d8">[158398179, 494402756]</data>
       <data key="d9">False</data>
-      <data key="d11">['Calle 69A', 'Carrera 23B']</data>
-      <data key="d12">['residential', 'steps']</data>
+      <data key="d11">['Carrera 23B', 'Calle 69A']</data>
+      <data key="d12">['steps', 'residential']</data>
       <data key="d14">[False, True]</data>
       <data key="d15">79.354</data>
       <data key="d16">LINESTRING (-75.4847963 5.0519008, -75.4849171 5.0521345, -75.4844902 5.0522841)</data>
@@ -6775,7 +6775,7 @@
     <edge source="469564166" target="469846914" id="0">
       <data key="d8">[824594786, 823934039]</data>
       <data key="d10">2</data>
-      <data key="d11">['Carrera 20', 'Vía Al Matadero']</data>
+      <data key="d11">['Vía Al Matadero', 'Carrera 20']</data>
       <data key="d12">secondary</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
@@ -6992,7 +6992,7 @@
     <edge source="469586128" target="469593117" id="0">
       <data key="d8">[39201025, 1136220538]</data>
       <data key="d10">2</data>
-      <data key="d11">['Calle 58', 'Carrera 20C']</data>
+      <data key="d11">['Carrera 20C', 'Calle 58']</data>
       <data key="d12">tertiary</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
@@ -7245,7 +7245,7 @@
     <edge source="469593117" target="469586128" id="0">
       <data key="d8">[39201025, 1136220538]</data>
       <data key="d10">2</data>
-      <data key="d11">['Calle 58', 'Carrera 20C']</data>
+      <data key="d11">['Carrera 20C', 'Calle 58']</data>
       <data key="d12">tertiary</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
@@ -7671,7 +7671,7 @@
     <edge source="469846914" target="469564166" id="0">
       <data key="d8">[824594786, 823934039]</data>
       <data key="d10">2</data>
-      <data key="d11">['Carrera 20', 'Vía Al Matadero']</data>
+      <data key="d11">['Vía Al Matadero', 'Carrera 20']</data>
       <data key="d12">secondary</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
@@ -7722,8 +7722,8 @@
     </edge>
     <edge source="469846939" target="469846942" id="1">
       <data key="d8">[39227624, 39221554, 39221555]</data>
-      <data key="d11">['Calle 54', 'Calle 53', 'Carrera 17']</data>
-      <data key="d12">['residential', 'track']</data>
+      <data key="d11">['Carrera 17', 'Calle 54', 'Calle 53']</data>
+      <data key="d12">['track', 'residential']</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
       <data key="d15">129.856</data>
@@ -7765,7 +7765,7 @@
     <edge source="469846942" target="469846939" id="1">
       <data key="d8">[39227624, 39221554, 39221555]</data>
       <data key="d11">['Carrera 17', 'Calle 53', 'Calle 54']</data>
-      <data key="d12">['residential', 'track']</data>
+      <data key="d12">['track', 'residential']</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
       <data key="d15">129.85600000000002</data>
@@ -8120,7 +8120,7 @@
     </edge>
     <edge source="475479260" target="596452378" id="0">
       <data key="d8">[46673432, 477763952, 477763956]</data>
-      <data key="d11">['Carrera 22', 'Calle 61', 'Carrera 21']</data>
+      <data key="d11">['Carrera 21', 'Carrera 22', 'Calle 61']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
@@ -9008,7 +9008,7 @@
     <edge source="581050156" target="323309906" id="0">
       <data key="d8">[437902531, 136037062]</data>
       <data key="d11">Calle 60</data>
-      <data key="d12">['steps', 'residential']</data>
+      <data key="d12">['residential', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
       <data key="d15">66.094</data>
@@ -9115,7 +9115,7 @@
     </edge>
     <edge source="581050238" target="9930090027" id="0">
       <data key="d8">[45566592, 1078562588]</data>
-      <data key="d12">['steps', 'footway']</data>
+      <data key="d12">['footway', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
       <data key="d15">191.32100000000003</data>
@@ -9580,7 +9580,7 @@
     <edge source="581184479" target="6896591252" id="0">
       <data key="d8">[1136220537, 39201026]</data>
       <data key="d10">2</data>
-      <data key="d11">['Carrera 20B', 'Calle 59']</data>
+      <data key="d11">['Calle 59', 'Carrera 20B']</data>
       <data key="d12">tertiary</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
@@ -9933,7 +9933,7 @@
     </edge>
     <edge source="581954204" target="1186400118" id="0">
       <data key="d8">[699129268, 45665821]</data>
-      <data key="d11">['Vía Lucitania - Sancancio', 'Calle 82']</data>
+      <data key="d11">['Calle 82', 'Vía Lucitania - Sancancio']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
@@ -10201,7 +10201,7 @@
     <edge source="582278001" target="581973099" id="0">
       <data key="d8">[1056884043, 47460483]</data>
       <data key="d9">True</data>
-      <data key="d10">['2', '1']</data>
+      <data key="d10">['1', '2']</data>
       <data key="d11">Avenida Alberto Mendoza Hoyos</data>
       <data key="d12">primary</data>
       <data key="d14">False</data>
@@ -10308,7 +10308,7 @@
     </edge>
     <edge source="582617844" target="7770159173" id="0">
       <data key="d8">[48190756, 825945439]</data>
-      <data key="d11">['Carrera 22', 'Calle 76A']</data>
+      <data key="d11">['Calle 76A', 'Carrera 22']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
@@ -10345,7 +10345,7 @@
     <edge source="582617888" target="309309092" id="0">
       <data key="d8">[913459283, 1055492494]</data>
       <data key="d9">True</data>
-      <data key="d10">['2', '1']</data>
+      <data key="d10">['1', '2']</data>
       <data key="d11">Calle 62</data>
       <data key="d12">tertiary</data>
       <data key="d14">False</data>
@@ -10779,7 +10779,7 @@
     </edge>
     <edge source="596452378" target="475479260" id="0">
       <data key="d8">[477763952, 46673432, 477763956]</data>
-      <data key="d11">['Carrera 22', 'Calle 61', 'Carrera 21']</data>
+      <data key="d11">['Carrera 21', 'Carrera 22', 'Calle 61']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
@@ -11008,7 +11008,7 @@
     </edge>
     <edge source="599287084" target="7711693176" id="0">
       <data key="d8">[46961210, 825945819]</data>
-      <data key="d11">['Camino a la Libertad', 'Vía del Alto del Perro']</data>
+      <data key="d11">['Vía del Alto del Perro', 'Camino a la Libertad']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
@@ -12448,7 +12448,7 @@
     </edge>
     <edge source="1186400118" target="581954204" id="0">
       <data key="d8">[699129268, 45665821]</data>
-      <data key="d11">['Vía Lucitania - Sancancio', 'Calle 82']</data>
+      <data key="d11">['Calle 82', 'Vía Lucitania - Sancancio']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
@@ -13312,7 +13312,7 @@
       <data key="d8">[1210777690, 494402755, 99019901]</data>
       <data key="d9">False</data>
       <data key="d11">Carrera 23B</data>
-      <data key="d12">['residential', 'unclassified', 'steps']</data>
+      <data key="d12">['unclassified', 'steps', 'residential']</data>
       <data key="d14">True</data>
       <data key="d15">93.05</data>
       <data key="d16">LINESTRING (-75.4843428 5.0502573, -75.484206 5.0500131, -75.4838749 5.0502047, -75.4837223 5.0502929)</data>
@@ -13328,7 +13328,7 @@
     </edge>
     <edge source="1615365741" target="4861628448" id="0">
       <data key="d8">[477766044, 1016593327]</data>
-      <data key="d11">['Calle 70B', 'Carrera 24']</data>
+      <data key="d11">['Carrera 24', 'Calle 70B']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
@@ -13443,8 +13443,8 @@
     </edge>
     <edge source="1706011978" target="367936027" id="0">
       <data key="d8">[158398179, 494402756]</data>
-      <data key="d11">['Calle 69A', 'Carrera 23B']</data>
-      <data key="d12">['steps', 'residential']</data>
+      <data key="d11">['Carrera 23B', 'Calle 69A']</data>
+      <data key="d12">['residential', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
       <data key="d15">79.354</data>
@@ -14007,7 +14007,7 @@
     </edge>
     <edge source="4814201941" target="4814201946" id="0">
       <data key="d8">[489146394, 824962562, 489146396]</data>
-      <data key="d11">['Carrera 29C', 'Calle 68', 'Calle 67A']</data>
+      <data key="d11">['Carrera 29C', 'Calle 67A', 'Calle 68']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
@@ -14429,7 +14429,7 @@
     </edge>
     <edge source="4861628448" target="1615365741" id="0">
       <data key="d8">[477766044, 1016593327]</data>
-      <data key="d11">['Calle 70B', 'Carrera 24']</data>
+      <data key="d11">['Carrera 24', 'Calle 70B']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">[False, True]</data>
@@ -15685,7 +15685,7 @@
     </edge>
     <edge source="5369131088" target="5369147352" id="0">
       <data key="d8">[556597051, 556597052]</data>
-      <data key="d12">['residential', 'service']</data>
+      <data key="d12">['service', 'residential']</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
       <data key="d15">146.154</data>
@@ -15952,7 +15952,7 @@
     </edge>
     <edge source="5371022950" target="1615365739" id="0">
       <data key="d8">[1210777690, 494402755, 99019901]</data>
-      <data key="d12">['unclassified', 'residential', 'steps']</data>
+      <data key="d12">['residential', 'unclassified', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
       <data key="d15">93.05</data>
@@ -16025,7 +16025,7 @@
     </edge>
     <edge source="5405882375" target="5405882385" id="0">
       <data key="d8">[560555580, 558913550]</data>
-      <data key="d12">['service', 'path']</data>
+      <data key="d12">['path', 'service']</data>
       <data key="d18">driveway</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
@@ -16063,7 +16063,7 @@
     </edge>
     <edge source="5405882385" target="5405882375" id="1">
       <data key="d8">[560555580, 558913550]</data>
-      <data key="d12">['service', 'path']</data>
+      <data key="d12">['path', 'service']</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
       <data key="d15">110.887</data>
@@ -16765,7 +16765,7 @@
     <edge source="6896591252" target="581184479" id="0">
       <data key="d8">[1136220537, 39201026]</data>
       <data key="d10">2</data>
-      <data key="d11">['Carrera 20B', 'Calle 59']</data>
+      <data key="d11">['Calle 59', 'Carrera 20B']</data>
       <data key="d12">tertiary</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
@@ -17687,7 +17687,7 @@
     </edge>
     <edge source="7711693176" target="599287084" id="0">
       <data key="d8">[46961210, 825945819]</data>
-      <data key="d11">['Camino a la Libertad', 'Vía del Alto del Perro']</data>
+      <data key="d11">['Vía del Alto del Perro', 'Camino a la Libertad']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
@@ -18585,7 +18585,7 @@
     </edge>
     <edge source="7770159173" target="582617844" id="0">
       <data key="d8">[48190756, 825945439]</data>
-      <data key="d11">['Carrera 22', 'Calle 76A']</data>
+      <data key="d11">['Calle 76A', 'Carrera 22']</data>
       <data key="d12">residential</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
@@ -19271,7 +19271,7 @@
     </edge>
     <edge source="9191850063" target="9191850061" id="0">
       <data key="d8">[995422832, 995422831]</data>
-      <data key="d12">['steps', 'footway']</data>
+      <data key="d12">['footway', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">True</data>
       <data key="d15">40.373000000000005</data>
@@ -20549,7 +20549,7 @@
     <edge source="9711582845" target="4815387988" id="0">
       <data key="d8">[1055989022, 1055989023]</data>
       <data key="d9">True</data>
-      <data key="d10">['2', '3']</data>
+      <data key="d10">['3', '2']</data>
       <data key="d11">Avenida Kevin Ángel</data>
       <data key="d12">primary</data>
       <data key="d14">False</data>
@@ -21093,7 +21093,7 @@
     </edge>
     <edge source="9887833095" target="7775731949" id="0">
       <data key="d8">[1078562597, 1078562598]</data>
-      <data key="d12">['steps', 'footway']</data>
+      <data key="d12">['footway', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
       <data key="d15">22.44</data>
@@ -21896,7 +21896,7 @@
     </edge>
     <edge source="9930089936" target="9930089933" id="0">
       <data key="d8">[1083576524, 1083576525]</data>
-      <data key="d12">['steps', 'footway']</data>
+      <data key="d12">['footway', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
       <data key="d15">8.384</data>
@@ -22484,7 +22484,7 @@
     </edge>
     <edge source="9930089987" target="9930089984" id="0">
       <data key="d8">[1083576540, 1083576541]</data>
-      <data key="d12">['steps', 'footway']</data>
+      <data key="d12">['footway', 'steps']</data>
       <data key="d9">False</data>
       <data key="d14">False</data>
       <data key="d15">18.677999999999997</data>
@@ -22798,7 +22798,7 @@
     <edge source="10047595391" target="469621013" id="0">
       <data key="d8">[1055520773, 1055520774]</data>
       <data key="d9">True</data>
-      <data key="d10">['2', '3']</data>
+      <data key="d10">['3', '2']</data>
       <data key="d11">Avenida Santander</data>
       <data key="d12">primary</data>
       <data key="d13">30</data>
@@ -22870,7 +22870,7 @@
     <edge source="10047606334" target="469620833" id="0">
       <data key="d8">[48708273, 1064193322]</data>
       <data key="d9">True</data>
-      <data key="d10">['2', '3']</data>
+      <data key="d10">['3', '2']</data>
       <data key="d11">Avenida Santander</data>
       <data key="d12">primary</data>
       <data key="d13">30</data>
@@ -23283,7 +23283,7 @@
       <data key="d15">37.528000000000006</data>
       <data key="d16">LINESTRING (-75.483886 5.0467961, -75.4838172 5.0466413, -75.483759 5.0464834)</data>
     </edge>
-    <data key="d0">2024-03-26 10:15:57</data>
+    <data key="d0">2024-04-06 19:22:12</data>
     <data key="d1">OSMnx 1.9.1</data>
     <data key="d2">epsg:4326</data>
     <data key="d3">True</data>

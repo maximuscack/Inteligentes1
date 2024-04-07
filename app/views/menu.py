@@ -69,14 +69,21 @@ class Menu:
             destino = st.text_input('Destino', '')
             origen = st.text_input('Origen', '')
             if (origen != '' and destino != ''):
-                origen, destino = int(origen), int(destino)
+
+                eficiencia = st.number_input(
+                    'Eficiencia de combustible del vehículo',
+                    value=100
+                )
+
+                origen, destino, eficiencia = int(
+                    origen), int(destino), float(eficiencia)
                 if st.button('Hallar ruta más corta'):
                     self.shortest_path(origen, destino)
                     self.gifs_generated = False  # Reset the state after calculating the route
                 elif st.button('Hallar ruta más rapida'):
                     self.fastest_path(origen, destino)
                 elif st.button('Hallar ruta con menor consumo de combustible'):
-                    self.less_fuel_path(origen, destino)
+                    self.less_fuel_path(origen, destino, eficiencia)
                 elif st.button('Hallar ruta más económica para el pasajero'):
                     self.less_cost_path(origen, destino)
                 elif st.button('Hacer un Tour trip'):
@@ -104,7 +111,7 @@ class Menu:
         self.limpiar_carpeta()
 
         # Ejecutar el algoritmo A*
-        self.aService.a_star(origen, destino)
+        self.aService.a_star_shortest_path(origen, destino)
 
         # Reconstruir el camino y guardar las imágenes del proceso
         self.aService.reconstruct_path(origen, destino)
@@ -138,8 +145,11 @@ class Menu:
     def fastest_path(self, origen: int, destino: int):
         pass
 
-    def less_fuel_path(self, origen: int, destino: int):
-        pass
+    def less_fuel_path(self, origen: int, destino: int, eficiencia: float):
+        self.limpiar_carpeta()
+
+        # Ejecutar el algoritmo Dijkstra
+        self.aService.dijkstra_less_fuel_path(origen, destino, 100)
 
     def less_cost_path(self, origen: int, destino: int):
         pass
