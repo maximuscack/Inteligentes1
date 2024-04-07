@@ -175,12 +175,13 @@ class Algorithm:
     """ Segundo punto """
 
     def a_star_traffic_lights(self, origen: int, destino: int):
-
         for node in self._G.nodes:
             self._G.nodes[node]['previous'] = None
             self._G.nodes[node]['g_score'] = float('inf')
             self._G.nodes[node]['f_score'] = float('inf')
 
+            if node == origen or node == destino:
+                continue
             if random.random() < 0.15:
                 self._G.nodes[node]['tiempo'] = random.randint(1, 10)
                 self._G.nodes[node]['color'] = RED_NODE
@@ -200,10 +201,6 @@ class Algorithm:
         self._G.nodes[origen]['g_score'] = 0
         self._G.nodes[destino]['color'] = WHITE_NODE
         self._G.nodes[destino]['size'] = 50
-
-        # print('LLAVES1::', set([
-        #     self._G.nodes[node]['color'] for node in self._G.nodes
-        # ]))
 
         pq = [(self._G.nodes[origen]['f_score'], origen)]
         step = 0
